@@ -1,0 +1,676 @@
+# Meshcore Manager - the settings a node lets change: what each one is, and what it accepts.
+# Shown in edit mode (the "Selected setting" box, and the ? popup). The rules decide what can be
+# typed: a key that cannot be part of a valid value is refused, and a value is checked before it
+# is taken.
+#
+# Written from the MeshCore firmware, which is the reference when the two differ:
+#   docs/cli_commands.md, src/helpers/CommonCLI.cpp, src/helpers/CommonRadioPrefs.cpp,
+#   examples/companion_radio/MyMesh.cpp
+# MeshCore: MIT License, Copyright (c) 2025 Scott Powell / rippleradios.com
+#
+# A newer or corrected copy can go in the data folder as settings_help.toml: its entries (by id
+# and node) replace these. A translation: locales/<code>/settings_help.toml (same ids).
+#
+# Fields
+#   id        the setting: a repeater / room / sensor's own name ("loop.detect"); a companion's
+#             ids are those of src/node/edit.rs ("name", "freq", "manual.add"...)
+#   node      "companion" or "console" (repeater, room server, sensor); none = both
+#   title     one line
+#   summary   what it does, one paragraph
+#   notes     more paragraphs
+#   warning   shown in yellow
+#   default   the firmware's default
+#   since     the firmware version that added it
+#   type      what it accepts:
+#               number   a number, min..max (decimals allowed)
+#               integer  a whole number, min..max
+#               choice   one of `values` (picked with the arrows)
+#               text     text: at most max_bytes bytes, none of the `forbidden` characters,
+#                        empty allowed when empty_ok
+#               radio    "freq,bw,sf,cr" (a repeater's radio)
+#               key      hex digits, exactly max_bytes bytes (two digits each)
+#   min, max  the range (number, integer); zero_off = 0 is accepted too ("off")
+#   unit      shown after the range ("MHz", "%")
+#   values    { value = what is sent, shows = what the node answers when that differs,
+#               means = what it does }
+
+# ---------------------------------------------------------------------------------------------
+# Companion (USB companion firmware)
+# ---------------------------------------------------------------------------------------------
+
+[[setting]]
+id = "name"
+node = "companion"
+title = "Node name"
+summary = "The name this companion advertises on the mesh and shows in other people's contact lists."
+notes = ["Emoji and accented letters take more than one byte each."]
+type = "text"
+max_bytes = 31
+
+[[setting]]
+id = "lat"
+title = "Latitude"
+summary = "The latitude the node advertises, in decimal degrees (north is positive). 0 with a longitude of 0 means no position."
+default = "0"
+type = "number"
+min = -90
+max = 90
+unit = "°"
+
+[[setting]]
+id = "lon"
+title = "Longitude"
+summary = "The longitude the node advertises, in decimal degrees (east is positive). 0 with a latitude of 0 means no position."
+default = "0"
+type = "number"
+min = -180
+max = 180
+unit = "°"
+
+[[setting]]
+id = "freq"
+node = "companion"
+title = "Radio frequency"
+summary = "The LoRa frequency, in MHz. Every node this one talks with must use the same frequency, bandwidth, spreading factor and coding rate."
+warning = "Changing it cuts the node off from a mesh that keeps the old settings. Use a frequency allowed where you are."
+default = "869.618 (EU / UK narrow preset)"
+type = "number"
+min = 150
+max = 2500
+unit = "MHz"
+
+[[setting]]
+id = "bw"
+node = "companion"
+title = "Radio bandwidth"
+summary = "The LoRa bandwidth, in kHz. Narrower reaches further and is slower. Must match the mesh."
+warning = "Changing it cuts the node off from a mesh that keeps the old settings."
+default = "62.5"
+type = "number"
+min = 7
+max = 500
+unit = "kHz"
+
+[[setting]]
+id = "sf"
+node = "companion"
+title = "Spreading factor"
+summary = "How much each bit is spread over time. Higher reaches further and resists noise, but every packet takes longer on the air. Must match the mesh."
+warning = "Changing it cuts the node off from a mesh that keeps the old settings."
+default = "8"
+type = "integer"
+min = 5
+max = 12
+
+[[setting]]
+id = "cr"
+node = "companion"
+title = "Coding rate"
+summary = "How many error-correction bits go with the data (4/5 to 4/8). Higher survives more interference, at the cost of air time. Must match the mesh."
+warning = "Changing it cuts the node off from a mesh that keeps the old settings."
+default = "5"
+type = "integer"
+min = 5
+max = 8
+
+[[setting]]
+id = "tx"
+node = "companion"
+title = "Transmit power"
+summary = "The power of the LoRa chip, in dBm. The node refuses more than its board allows (shown as max power)."
+notes = ["Some boards add an amplifier after the chip: the power on the air is then higher than this value. See the board's manual."]
+warning = "Too much power may be against the law where you are."
+type = "integer"
+min = -9
+max = 30
+unit = "dBm"
+
+[[setting]]
+id = "manual.add"
+node = "companion"
+title = "Add every node heard"
+summary = "What the companion does with a node it hears for the first time (its advert)."
+type = "choice"
+values = [
+  { value = "on", means = "every node heard goes into the contacts by itself" },
+  { value = "off", means = "only the types turned on under \"auto-add\" go in by themselves; the others are only listed, and the app adds the ones you want" },
+]
+
+[[setting]]
+id = "autoadd.chat"
+node = "companion"
+title = "Auto-add: companions"
+summary = "With \"add every node heard\" off: other companions (people) heard still go into the contacts by themselves. With it on, every type goes in anyway."
+since = "1.12"
+default = "off"
+type = "choice"
+values = [{ value = "off", means = "not added by themselves" }, { value = "on", means = "added when heard" }]
+
+[[setting]]
+id = "autoadd.repeater"
+node = "companion"
+title = "Auto-add: repeaters"
+summary = "With \"add every node heard\" off: repeaters heard still go into the contacts by themselves. With it on, every type goes in anyway."
+since = "1.12"
+default = "off"
+type = "choice"
+values = [{ value = "off", means = "not added by themselves" }, { value = "on", means = "added when heard" }]
+
+[[setting]]
+id = "autoadd.room"
+node = "companion"
+title = "Auto-add: room servers"
+summary = "With \"add every node heard\" off: room servers heard still go into the contacts by themselves. With it on, every type goes in anyway."
+since = "1.12"
+default = "off"
+type = "choice"
+values = [{ value = "off", means = "not added by themselves" }, { value = "on", means = "added when heard" }]
+
+[[setting]]
+id = "autoadd.sensor"
+node = "companion"
+title = "Auto-add: sensors"
+summary = "With \"add every node heard\" off: sensors heard still go into the contacts by themselves. With it on, every type goes in anyway."
+since = "1.12"
+default = "off"
+type = "choice"
+values = [{ value = "off", means = "not added by themselves" }, { value = "on", means = "added when heard" }]
+
+[[setting]]
+id = "autoadd.overwrite"
+node = "companion"
+title = "Contacts full: replace the oldest"
+summary = "When the contact list is full and a new node is to be added: whether it takes the place of the oldest contact that is not a favourite."
+since = "1.12"
+default = "off"
+type = "choice"
+values = [
+  { value = "off", means = "the new node is not added" },
+  { value = "on", means = "the oldest non-favourite contact makes room (favourites are never replaced)" },
+]
+
+[[setting]]
+id = "autoadd.hops"
+node = "companion"
+title = "Auto-add: farthest node"
+summary = "How far away a node may be to be added by itself: 0 = any distance, 1 = only nodes heard directly, N = up to N-1 hops."
+since = "1.12"
+default = "0"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "advert.loc"
+node = "companion"
+title = "Position in adverts"
+summary = "Whether this node's adverts carry its position, so others can show it on a map."
+type = "choice"
+values = [
+  { value = "off", means = "adverts carry no position" },
+  { value = "on", means = "adverts carry the latitude and longitude set here" },
+]
+
+[[setting]]
+id = "multi.acks"
+title = "Multi-ACKs"
+summary = "Whether each acknowledgement of a direct message is sent more than once."
+default = "0"
+type = "choice"
+values = [
+  { value = "0", means = "one acknowledgement" },
+  { value = "1", means = "extra acknowledgements: more reliable delivery, more air time" },
+]
+
+[[setting]]
+id = "telemetry.base"
+node = "companion"
+title = "Telemetry: basic"
+summary = "Who may ask this node for its basic telemetry (battery and the like)."
+type = "choice"
+values = [
+  { value = "0", means = "nobody" },
+  { value = "1", means = "contacts allowed by their own telemetry flags" },
+  { value = "2", means = "everyone" },
+]
+
+[[setting]]
+id = "telemetry.loc"
+node = "companion"
+title = "Telemetry: position"
+summary = "Who may ask this node for its position."
+type = "choice"
+values = [
+  { value = "0", means = "nobody" },
+  { value = "1", means = "contacts allowed by their own telemetry flags" },
+  { value = "2", means = "everyone" },
+]
+
+[[setting]]
+id = "telemetry.env"
+node = "companion"
+title = "Telemetry: sensors"
+summary = "Who may ask this node for its sensor readings (temperature, humidity...)."
+type = "choice"
+values = [
+  { value = "0", means = "nobody" },
+  { value = "1", means = "contacts allowed by their own telemetry flags" },
+  { value = "2", means = "everyone" },
+]
+
+[[setting]]
+id = "rxdelay"
+title = "Receive delay (experimental)"
+summary = "A flood packet heard with a weak signal waits before it is handled; one heard strongly is handled at once. Strong paths then forward first, and the weak copies are dropped as duplicates."
+notes = ["0 turns it off."]
+default = "0"
+type = "number"
+min = 0
+max = 20
+
+[[setting]]
+id = "dutycycle"
+node = "companion"
+title = "Duty cycle limit"
+summary = "The most of the time this companion may spend sending, in percent. 100 = no limit. The companion keeps it as an airtime factor: this program converts it (factor = 100 / percent - 1), as a repeater's dutycycle does."
+warning = "Choose a value allowed where you are: EU 868 MHz bands allow 10 %, some only 1 %."
+default = "50"
+type = "number"
+min = 1
+max = 100
+unit = "%"
+
+[[setting]]
+id = "af"
+title = "Airtime factor"
+summary = "After each send the node stays quiet for about its air time times this value. The long-term duty cycle is about 1 / (1 + af): 1 = 50 %, 2 = 33 %, 3 = 25 %, 9 = 10 %."
+notes = ["On repeaters from firmware 1.15 on, dutycycle sets the same thing as a percentage."]
+warning = "Choose a value allowed where you are (for example 10 % duty cycle on EU 868 MHz)."
+default = "1.0"
+type = "number"
+min = 0
+max = 9
+
+[[setting]]
+id = "path.hash.mode"
+title = "Path hash size"
+summary = "The size of this node's id in the paths of the packets it sends (adverts). Bigger ids are less often mistaken for another node, but a packet then holds fewer hops."
+warning = "Firmware 1.13 and older drop packets with 2- or 3-byte ids: they may not reach far while such nodes remain."
+default = "0"
+since = "1.14"
+type = "choice"
+values = [
+  { value = "0", means = "1 byte (256 ids, up to 64 hops)" },
+  { value = "1", means = "2 bytes (65 536 ids, up to 32 hops)" },
+  { value = "2", means = "3 bytes (16.7 million ids, up to 21 hops)" },
+]
+
+[[setting]]
+id = "ble.pin"
+node = "companion"
+title = "Bluetooth PIN"
+summary = "The PIN a phone or a computer types to pair with this companion over Bluetooth: 6 digits, or 0 for the firmware's own choice."
+notes = [
+  "0: a companion with a screen draws a new random PIN at each start and shows it; one without a screen uses 123456.",
+  "Used from the companion's next start. Phones and computers already paired keep working; a new pairing asks the new PIN.",
+]
+default = "0"
+type = "integer"
+min = 100000
+max = 999999
+zero_off = true
+
+# ---------------------------------------------------------------------------------------------
+# Repeater, room server, sensor (their text console: set <id> <value>)
+# ---------------------------------------------------------------------------------------------
+
+[[setting]]
+id = "radio"
+node = "console"
+title = "Radio parameters"
+summary = "Frequency (MHz), bandwidth (kHz), spreading factor and coding rate, written as freq,bw,sf,cr. Every node of the mesh must use the same."
+notes = ["The node uses them after a reboot."]
+warning = "Changing them cuts the node off from a mesh that keeps the old settings. Use a frequency allowed where you are."
+default = "869.618,62.5,8,5"
+type = "radio"
+
+[[setting]]
+id = "tx"
+node = "console"
+title = "Transmit power"
+summary = "The power of the LoRa chip, in dBm."
+notes = ["Some boards add an amplifier after the chip: the power on the air is then higher than this value. See the board's manual."]
+warning = "Too much power may be against the law where you are."
+default = "depends on the board"
+type = "integer"
+min = 1
+max = 22
+unit = "dBm"
+
+[[setting]]
+id = "radio.rxgain"
+node = "console"
+title = "Boosted receive gain"
+summary = "The radio chip's boosted receive gain (SX12xx, LR1110): hears weaker signals."
+notes = ["After an upgrade to 1.14.1 without erasing, it may be off (firmware issue #2118)."]
+default = "on"
+since = "1.14.1"
+type = "choice"
+values = [
+  { value = "on", means = "boosted gain" },
+  { value = "off", means = "normal gain" },
+]
+
+[[setting]]
+id = "radio.fem.rxgain"
+node = "console"
+title = "Front-end receive gain"
+summary = "The receive amplifier of the board's LoRa front end, on boards that have one. Separate from the radio chip's own gain (radio.rxgain)."
+type = "choice"
+values = [
+  { value = "on", means = "amplifier on" },
+  { value = "off", means = "amplifier off" },
+]
+
+[[setting]]
+id = "radio.fem.txgain"
+node = "console"
+title = "Front-end transmit gain"
+summary = "The selectable transmit gain of the board's LoRa front end, on boards that have one."
+notes = ["On a Station G3 it applies from the next send; the PA PL1 jumper must be removed for software control."]
+warning = "Check that the total power is allowed where you are and that the power supply can take it."
+type = "choice"
+values = [
+  { value = "on", means = "high gain" },
+  { value = "off", means = "low gain" },
+]
+
+[[setting]]
+id = "name"
+node = "console"
+title = "Node name"
+summary = "The name the node advertises on the mesh."
+notes = ["An advert holds up to 31 bytes of name, 23 when it carries a position: a longer name is cut. Emoji and accented letters take more than one byte."]
+type = "text"
+max_bytes = 31
+forbidden = "[]\\:,?*"
+
+[[setting]]
+id = "password"
+node = "console"
+title = "Admin password"
+summary = "The password that logs in as admin from a phone or another node: whoever has it can change every setting, over the air."
+notes = [
+  "Changed with its own command (password <new>), not with set. The node answers with the new password: this program does not show or log that answer.",
+  "The firmware has no command to read it back: neither this program nor a backup can show it, only replace it.",
+]
+warning = "Keep the new one: without it, the node can only be managed over USB."
+default = "password"
+type = "text"
+max_bytes = 15
+
+[[setting]]
+id = "prv.key"
+title = "Private key (identity)"
+summary = "The node's identity on the mesh: 64 bytes, typed as 128 hex digits. Its public key, the one every other node knows it by, comes from it."
+notes = [
+  "A repeater, room server or sensor takes it with set prv.key and uses it after a reboot. A companion takes it at once and reloads its contacts.",
+  "The firmware refuses a key that is not a valid one. A companion built without key import refuses it too.",
+  "Back the node up first: the backup holds the old key.",
+]
+warning = "Another key makes it another node: contacts, logins, paths and room memberships known for the old key no longer reach it."
+type = "key"
+max_bytes = 64
+
+[[setting]]
+id = "guest.password"
+node = "console"
+title = "Guest password"
+summary = "The password that logs in as a guest: read-only access, no settings. On a room server, the password to join the room."
+notes = [
+  "Empty: no guest login (a repeater's default).",
+  "Shown in edit mode, or with s in the node's view; a backup holds it (with its secrets).",
+]
+type = "text"
+max_bytes = 15
+empty_ok = true
+
+[[setting]]
+id = "owner.info"
+node = "console"
+title = "Owner info"
+summary = "A free text about the owner, given to whoever asks the node. A | starts a new line."
+since = "1.12"
+type = "text"
+max_bytes = 119
+empty_ok = true
+
+[[setting]]
+id = "adc.multiplier"
+node = "console"
+title = "Battery reading multiplier"
+summary = "Fine-tunes the battery voltage reading. 0 uses the board's own value."
+default = "0 (the board's value)"
+type = "number"
+min = 0
+max = 10
+
+[[setting]]
+id = "repeat"
+node = "console"
+title = "Repeat"
+summary = "Whether the node forwards other nodes' packets. A repeater that does not repeat only answers for itself."
+default = "on"
+type = "choice"
+values = [
+  { value = "on", means = "forwards packets" },
+  { value = "off", means = "does not forward" },
+]
+
+[[setting]]
+id = "loop.detect"
+node = "console"
+title = "Loop detection"
+summary = "Drops flood packets that look like they are going round in a loop: its own id is already in their path too many times. One bad firmware that changes packets can otherwise start a storm repeated up to 64 hops."
+default = "off"
+since = "1.14"
+type = "choice"
+values = [
+  { value = "off", means = "no check" },
+  { value = "minimal", means = "dropped when its id is already there 4 times (1-byte ids), 2 times (2-byte), once (3-byte)" },
+  { value = "moderate", means = "dropped at 2 times (1-byte ids), once (2- and 3-byte)" },
+  { value = "strict", means = "dropped as soon as its id is already there once" },
+]
+
+[[setting]]
+id = "txdelay"
+node = "console"
+title = "Flood retransmit delay"
+summary = "When several repeaters hear the same flood packet, each waits a random time before sending it on, so they do not all send at once. This factor scales that random wait: higher means fewer collisions and more delay. 0 = no wait."
+default = "0.5"
+type = "number"
+min = 0
+max = 2
+
+[[setting]]
+id = "direct.txdelay"
+node = "console"
+title = "Direct retransmit delay"
+summary = "The same random wait as the flood delay, for direct (routed) packets. Lower by default: a direct packet is meant for one next hop, so few nodes compete to send it."
+default = "0.3 (repeater), 0.2 (room server, sensor)"
+type = "number"
+min = 0
+max = 2
+
+[[setting]]
+id = "dutycycle"
+node = "console"
+title = "Duty cycle limit"
+summary = "The most of the time this node may spend sending, in percent. 100 = no limit. It is the airtime factor (af) written as a percentage."
+notes = ["The node answers with the value it really uses (rounded)."]
+warning = "Choose a value allowed where you are: EU 868 MHz bands allow 10 %, some only 1 %."
+default = "50"
+since = "1.15"
+type = "number"
+min = 1
+max = 100
+unit = "%"
+
+[[setting]]
+id = "int.thresh"
+node = "console"
+title = "Interference threshold"
+summary = "Before sending, the node listens; above this noise level it waits. 0 = no check."
+default = "0"
+type = "integer"
+min = 0
+max = 255
+
+[[setting]]
+id = "cad"
+node = "console"
+title = "Channel activity detection"
+summary = "Before sending, the radio itself checks whether someone is sending and waits if so. Works alongside the interference threshold."
+default = "off"
+type = "choice"
+values = [
+  { value = "on", means = "check before each send" },
+  { value = "off", means = "no check" },
+]
+
+[[setting]]
+id = "agc.reset.interval"
+node = "console"
+title = "AGC reset interval"
+summary = "How often the radio's automatic gain control is reset, in seconds. Rounded down to a multiple of 4. 0 = never."
+default = "0"
+type = "integer"
+min = 0
+max = 1020
+unit = "s"
+
+[[setting]]
+id = "flood.advert.interval"
+node = "console"
+title = "Flood advert interval"
+summary = "How often the node announces itself to the whole mesh, in hours. 0 = never."
+default = "47 (repeater, room server), 0 (sensor)"
+type = "integer"
+min = 3
+max = 168
+zero_off = true
+unit = "h"
+
+[[setting]]
+id = "advert.interval"
+node = "console"
+title = "Zero-hop advert interval"
+summary = "How often the node announces itself to its direct neighbours only, in minutes. Rounded down to an even number. 0 = never."
+notes = ["A new node starts at 2 minutes; saving any setting turns an interval under 60 into 0."]
+default = "0"
+type = "integer"
+min = 60
+max = 240
+zero_off = true
+unit = "min"
+
+[[setting]]
+id = "flood.max"
+node = "console"
+title = "Most hops for a flood"
+summary = "A flood packet that already travelled this many hops is not sent on."
+default = "64"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "flood.max.unscoped"
+node = "console"
+title = "Most hops for an unscoped flood"
+summary = "The same limit for packets with no region (scope). A low value such as 3 keeps local unscoped messages, while floods from far away stop here."
+default = "64 (follows flood.max until set)"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "flood.max.advert"
+node = "console"
+title = "Most hops for an advert"
+summary = "The same limit for adverts (nodes announcing themselves)."
+default = "8"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "allow.read.only"
+node = "console"
+title = "Read-only access"
+summary = "Room server: whether users without the password may read the room."
+default = "off"
+type = "choice"
+values = [
+  { value = "on", means = "anyone may read; posting needs a login" },
+  { value = "off", means = "reading needs a login too" },
+]
+
+[[setting]]
+id = "bridge.enabled"
+node = "console"
+title = "Bridge"
+summary = "Whether packets are bridged to the board's other link (RS-232 or ESP-Now)."
+default = "off"
+type = "choice"
+values = [
+  { value = "on", means = "bridge on" },
+  { value = "off", means = "bridge off" },
+]
+
+[[setting]]
+id = "bridge.delay"
+node = "console"
+title = "Bridge delay"
+summary = "How long a packet waits before it goes through the bridge, in milliseconds."
+default = "500"
+type = "integer"
+min = 0
+max = 10000
+unit = "ms"
+
+[[setting]]
+id = "bridge.source"
+node = "console"
+title = "Bridge source"
+summary = "Which packets go to the bridge."
+default = "logTx"
+type = "choice"
+values = [
+  { value = "rx", shows = "logRx", means = "the packets it receives" },
+  { value = "tx", shows = "logTx", means = "the packets it sends" },
+]
+
+[[setting]]
+id = "bridge.baud"
+node = "console"
+title = "Bridge speed"
+summary = "The speed of the RS-232 bridge, in baud."
+default = "115200"
+type = "choice"
+values = [
+  { value = "9600" },
+  { value = "19200" },
+  { value = "38400" },
+  { value = "57600" },
+  { value = "115200" },
+]
+
+[[setting]]
+id = "bridge.channel"
+node = "console"
+title = "Bridge channel"
+summary = "The Wi-Fi channel of the ESP-Now bridge."
+type = "integer"
+min = 1
+max = 14

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" width="860" height="400" role="img" aria-label="Meshcore Manager : mode édition sur un répéteur (noeud inventé)">
+  <style>
+    text { font: 12px ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace; white-space: pre; }
+    .bg { fill: #0c0c0c; } .fg { fill: #cccccc; } .wh { fill: #f2f2f2; } .dim { fill: #8a8a8a; } .ac { fill: #3a96dd; } .am { fill: #c19c00; }
+    .sel { fill: #1f4f7a; } .line { stroke: #3a96dd; stroke-width: 1.5; fill: none; } .grey { stroke: #5a5a5a; stroke-width: 1.2; fill: none; }
+    .b { font-weight: 700; } .k { font-size: 11px; } .dark { fill: #0c0c0c; font-weight: 700; }
+  </style>
+  <rect width="860" height="400" rx="8" class="bg"/>
+  <text x="16" y="22" class="wh">Hilltop-RPT</text><text x="112" y="22" class="wh">5E21</text>
+  <rect x="150" y="10" width="74" height="16" fill="#16c60c"/><text x="158" y="22" class="dark">répéteur</text>
+  <rect x="240" y="10" width="62" height="16" fill="#c19c00"/><text x="248" y="22" class="dark">CONFIG</text>
+  <rect x="302" y="10" width="130" height="16" fill="#5a5a5a"/><text x="308" y="22" class="wh b">rien de modifié</text>
+  <text x="16" y="40" class="dim">Heltec Mesh Node T114 (Heltec)  ·  v1.12.0-abc1234 (Build: 01-Oct-2026)  ·  USB COM5</text>
+  <text x="30" y="66" class="ac b">Résumé</text><text x="100" y="66" class="dim">Régions 3</text><text x="186" y="66" class="dim">Accès 2</text><text x="260" y="66" class="dim">Sauvegardes 4</text>
+  <rect x="10" y="78" width="460" height="290" rx="3" class="line"/>
+  <rect x="20" y="71" width="150" height="14" class="bg"/><text x="24" y="82" class="ac b">Réglages : édition</text>
+  <rect x="18" y="89" width="342" height="17" class="sel"/>
+  <text x="22" y="102" class="am">!</text><text x="22" y="119" class="am">!</text><text x="22" y="204" class="am">!</text><text x="22" y="340" class="am">!</text><text x="22" y="357" class="am">!</text>
+  <text x="36" y="102" class="wh">radio</text><text x="214" y="102" class="wh">915.8,250,10,5</text>
+  <text x="36" y="119" class="fg">tx</text><text x="214" y="119" class="fg">22</text>
+  <text x="36" y="136" class="fg">name</text><text x="214" y="136" class="fg">Hilltop-RPT</text>
+  <text x="36" y="153" class="fg">lat</text><text x="214" y="153" class="fg">0.0</text>
+  <text x="36" y="170" class="fg">lon</text><text x="214" y="170" class="fg">0.0</text>
+  <text x="36" y="187" class="fg">guest.password</text><text x="214" y="187" class="fg">••••••</text>
+  <text x="36" y="204" class="fg">repeat</text><text x="214" y="204" class="fg">on</text>
+  <text x="36" y="221" class="fg">path.hash.mode</text><text x="214" y="221" class="fg">0</text>
+  <text x="36" y="238" class="fg">loop.detect</text><text x="214" y="238" class="fg">minimal</text>
+  <text x="36" y="255" class="fg">txdelay</text><text x="214" y="255" class="fg">0.5</text>
+  <text x="36" y="272" class="fg">dutycycle</text><text x="214" y="272" class="fg">50.0%</text>
+  <text x="36" y="289" class="fg">advert.interval</text><text x="214" y="289" class="fg">120</text>
+  <text x="36" y="306" class="fg">flood.max</text><text x="214" y="306" class="fg">64</text>
+  <text x="36" y="323" class="fg">multi.acks</text><text x="214" y="323" class="fg">0</text>
+  <text x="36" y="340" class="fg">prv.key</text><text x="214" y="340" class="fg">••••••</text>
+  <text x="36" y="357" class="fg">password</text><text x="214" y="357" class="fg">••••••</text>
+  <rect x="480" y="78" width="370" height="290" rx="3" class="grey"/>
+  <rect x="490" y="71" width="120" height="14" class="bg"/><text x="494" y="82" class="ac b">Réglage choisi</text>
+  <text x="494" y="102" class="wh">Paramètres radio</text><text x="494" y="119" class="dim">radio</text>
+  <text x="494" y="143" class="fg">Fréquence (MHz), bande passante (kHz), SF et CR,</text>
+  <text x="494" y="160" class="fg">écrits freq,bw,sf,cr. Tous les noeuds du mesh</text>
+  <text x="494" y="177" class="fg">doivent avoir les mêmes.</text>
+  <text x="494" y="201" class="dim">valeurs</text><text x="510" y="218" class="fg">&lt;freq&gt;,&lt;bw&gt;,&lt;sf&gt;,&lt;cr&gt;</text>
+  <text x="494" y="235" class="dim">actuel</text><text x="510" y="252" class="fg">915.8,250,10,5</text>
+  <text x="494" y="269" class="dim">défaut</text><text x="510" y="286" class="fg">869.618,62.5,8,5</text>
+  <text x="494" y="303" class="dim">préréglage</text><text x="510" y="320" class="fg">Australia</text>
+  <text x="494" y="344" class="am">! Les changer coupe le noeud d'un mesh qui</text>
+  <text x="494" y="361" class="am">  garde les anciens réglages.</text>
+  <text x="14" y="388" class="k"><tspan class="ac b">Échap</tspan><tspan class="dim"> fin édition   </tspan><tspan class="ac b">↑↓</tspan><tspan class="dim"> choisir   </tspan><tspan class="ac b">Entrée</tspan><tspan class="dim"> modifier   </tspan><tspan class="ac b">?</tspan><tspan class="dim"> aide   </tspan><tspan class="ac b">p</tspan><tspan class="dim"> préréglages   </tspan><tspan class="ac b">s</tspan><tspan class="dim"> afficher secrets   </tspan><tspan class="ac b">c</tspan><tspan class="dim"> écrire (0)</tspan></text>
+</svg>

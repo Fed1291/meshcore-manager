@@ -1,0 +1,67 @@
+# Meshcore Tools: one workspace, one tool per folder.
+# Every tool shares this file's crate versions, one Cargo.lock and one target/ folder, so a crate
+# is downloaded and compiled once for all of them.
+# A new tool: its own folder with a Cargo.toml, added to `members`; a crate it needs is added to
+# [workspace.dependencies] here and used there with `name.workspace = true`.
+
+[workspace]
+resolver = "2"
+members = ["meshcore-manager"]
+
+[workspace.package]
+edition = "2021"
+# ratatui 0.30 needs 1.88
+rust-version = "1.88"
+# attribution, no commercial use, forks under the same license (LICENSE)
+license = "CC-BY-NC-SA-4.0"
+publish = false
+
+[workspace.dependencies]
+anyhow = "1"
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+# the console UI (crossterm comes with it: use ratatui::crossterm, never a second copy)
+ratatui = "0.30"
+# texts by language: Project Fluent .ftl files
+fluent-bundle = "0.16"
+unic-langid = "0.9"
+# the system's language for "automatic" (Windows sets no LANG variable): Windows, macOS, Linux
+sys-locale = "0.3"
+# serial ports: opens them on every system, lists them on Windows (with USB ids and serial number).
+# No default features: no libudev, so Linux builds need no system library (ports are read from /sys)
+serialport = { version = "4", default-features = false }
+# the system's "select folder" window, Windows only (Linux runs zenity / kdialog: nothing to link).
+# No default features: those are the Linux backends
+rfd = { version = "0.18", default-features = false }
+# Bluetooth companions on Windows: the system's Bluetooth LE API (WinRT). 0.62: async calls are
+# waited for with .join(), event handlers get windows::core::Ref
+windows = { version = "0.62", features = [
+    "Foundation",
+    "Foundation_Collections",
+    "Storage_Streams",
+    "Devices_Enumeration",
+    "Devices_Bluetooth",
+    "Devices_Bluetooth_Advertisement",
+    "Devices_Bluetooth_GenericAttributeProfile",
+    # the adapter's radio: on, off, disabled (checked before each scan, src/ble/windows.rs)
+    "Devices_Radios",
+    # the console in UTF-8 whatever the system's language (src/host.rs)
+    "Win32_System_Console",
+] }
+# Bluetooth companions on Linux: BlueZ. "vendored" compiles libdbus in, so the
+# cross-build from Windows needs no Linux libraries
+bluer = { version = "0.17", features = ["bluetoothd"] }
+dbus = { version = "0.9", features = ["vendored"] }
+tokio = { version = "1", features = ["rt", "macros", "time", "sync"] }
+futures = "0.3"
+# checksums of backup files
+sha2 = "0.11"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

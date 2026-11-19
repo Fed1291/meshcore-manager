@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470" width="860" height="470" role="img" aria-label="Meshcore Manager : la page Réglages (dossier inventé)">
+  <style>
+    text { font: 12px ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace; white-space: pre; }
+    .bg { fill: #0c0c0c; } .fg { fill: #cccccc; } .wh { fill: #f2f2f2; } .dim { fill: #8a8a8a; } .ac { fill: #3a96dd; }
+    .tab { fill: #3a96dd; } .field { fill: #5a5a5a; } .line { stroke: #3a96dd; stroke-width: 1.5; fill: none; } .grey { stroke: #5a5a5a; stroke-width: 1.2; fill: none; }
+    .b { font-weight: 700; } .k { font-size: 11px; } .dark { fill: #0c0c0c; font-weight: 700; }
+  </style>
+  <rect width="860" height="470" rx="8" class="bg"/>
+  <g transform="translate(14 10)" fill="#3a96dd"><path d="M0 0h8l6 9 6-9h8v32h-8V14l-6 8-6-8v18H0z"/><path d="M34 0h22v8H42v16h14v8H34z"/></g>
+  <text x="80" y="24" class="ac b">Meshcore Manager</text><text x="80" y="41" class="dim">(par Fed1291)</text>
+  <rect x="696" y="12" width="80" height="16" class="tab"/>
+  <text x="228" y="24" class="dim">1 Flotte</text><text x="298" y="24" class="dim">2 Sauvegardes</text><text x="402" y="24" class="dim">3 Contacts</text><text x="486" y="24" class="dim">4 Régions</text>
+  <text x="560" y="24" class="dim">5 Appareils</text><text x="646" y="24" class="dim">6 Logs</text><text x="700" y="24" class="dark">7 Réglages</text><text x="786" y="24" class="dim">8 Info</text>
+  <text x="12" y="66" class="fg">Les réglages de ce programme, dans config.toml (chaque changement s'applique aussitôt). Les</text>
+  <text x="12" y="82" class="fg">réglages des noeuds sont dans leur vue (Flotte, Enter).</text>
+  <rect x="10" y="104" width="560" height="332" rx="3" class="line"/>
+  <rect x="20" y="97" width="80" height="14" class="bg"/><text x="24" y="108" class="ac b">Réglages</text>
+  <text x="30" y="128" class="ac b">AFFICHAGE</text><text x="30" y="192" class="ac b">DIAGNOSTIC</text><text x="30" y="256" class="ac b">SAUVEGARDES</text><text x="30" y="320" class="ac b">BLUETOOTH</text><text x="30" y="384" class="ac b">TRADUCTION</text>
+  <text x="30" y="145" class="ac">»</text>
+  <text x="46" y="145" class="wh">Langue</text><text x="46" y="209" class="wh">Log debug</text><text x="46" y="273" class="wh">Dossier sauvegardes</text><text x="46" y="337" class="wh">PIN d'appairage</text><text x="46" y="401" class="wh">Fichiers d'origine</text>
+  <text x="66" y="164" class="ac">‹</text>
+  <text x="82" y="164" class="dim">automatique (Français)</text><text x="256" y="164" class="dim">English</text>
+  <rect x="314" y="152" width="78" height="16" class="tab"/><text x="320" y="164" class="dark">Français</text><text x="400" y="164" class="ac">›</text>
+  <rect x="66" y="216" width="70" height="16" class="field"/><text x="72" y="228" class="dim">oui</text><text x="102" y="228" class="wh b">non</text>
+  <rect x="66" y="280" width="300" height="16" class="field"/><text x="72" y="292" class="wh">C:\Apps\mcmanager\mcmanager-data\backups</text>
+  <rect x="66" y="344" width="64" height="16" class="field"/><text x="72" y="356" class="wh">••••••</text>
+  <rect x="66" y="408" width="320" height="16" class="field"/><text x="72" y="420" class="wh b">remettre les fichiers anglais et français</text>
+  <rect x="580" y="104" width="270" height="332" rx="3" class="grey"/>
+  <rect x="590" y="97" width="64" height="14" class="bg"/><text x="594" y="108" class="ac b">Choisi</text>
+  <text x="592" y="130" class="fg">La langue de tous les textes.</text><text x="592" y="147" class="fg">Automatique : celle du système,</text>
+  <text x="592" y="164" class="fg">sinon l'anglais. Un texte absent</text><text x="592" y="181" class="fg">d'une langue s'affiche en anglais.</text>
+  <text x="592" y="205" class="dim">Fichiers de langue :</text><text x="592" y="222" class="fg">C:\Apps\mcmanager\mcmanager-data</text>
+  <text x="592" y="239" class="fg">\lang, un dossier par code (en,</text><text x="592" y="256" class="fg">fr...) avec son mcmanager.ftl.</text>
+  <text x="592" y="273" class="fg">Copiez-en un pour commencer une</text><text x="592" y="290" class="fg">autre langue.</text>
+  <text x="592" y="322" class="dim">Fichier de réglages :</text><text x="592" y="339" class="fg">C:\Apps\mcmanager\mcmanager-data</text><text x="592" y="356" class="fg">\config.toml</text>
+  <text x="14" y="458" class="k"><tspan class="ac b">↑↓</tspan><tspan class="dim"> choisir   </tspan><tspan class="ac b">←→ Enter</tspan><tspan class="dim"> modifier   </tspan><tspan class="ac b">Tab</tspan><tspan class="dim"> changer   </tspan><tspan class="ac b">q</tspan><tspan class="dim"> sortir</tspan></text>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Meshcore Manager: five nodes linked into an "M", flat, on a near-black rounded tile.
+       A 16 px grid, symmetric around x = 128; strokes thick enough to read at 16 px.
+       Colours: the app's accent (cyan) and an amber relay node in the middle.
+       build.rs makes the .ico from this file. -->
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#06090C"/>
+  <polyline points="72,184 72,80 128,144 184,80 184,184" fill="none"
+            stroke="#38C6EE" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#38C6EE">
+    <circle cx="72" cy="80" r="21"/>
+    <circle cx="184" cy="80" r="21"/>
+    <circle cx="72" cy="184" r="21"/>
+    <circle cx="184" cy="184" r="21"/>
+  </g>
+  <circle cx="128" cy="144" r="21" fill="#FFB22E" stroke="#06090C" stroke-width="6"/>
+</svg>

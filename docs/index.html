@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meshcore Manager help</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='16 16 224 224'%3E%3Crect x='16' y='16' width='224' height='224' rx='52' fill='%2306090C'/%3E%3Cpolyline points='72,184 72,80 128,144 184,80 184,184' fill='none' stroke='%2338C6EE' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%2338C6EE'%3E%3Ccircle cx='72' cy='80' r='21'/%3E%3Ccircle cx='184' cy='80' r='21'/%3E%3Ccircle cx='72' cy='184' r='21'/%3E%3Ccircle cx='184' cy='184' r='21'/%3E%3C/g%3E%3Ccircle cx='128' cy='144' r='21' fill='%23FFB22E' stroke='%2306090C' stroke-width='6'/%3E%3C/svg%3E">
+<meta name="description" content="How to use Meshcore Manager: back up, restore and configure MeshCore nodes over USB and Bluetooth.">
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --text: #1d2228; --muted: #5d6670; --line: #dde2e8;
+  --accent: #0e7c8c; --accent-soft: #e3f3f5; --amber: #9a6a00; --amber-soft: #fbf1d9;
+  --green: #1f7a34; --red: #b42318; --kbd: #eef1f4; --shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1216; --panel: #171b21; --text: #e4e8ec; --muted: #9aa4ae; --line: #2a3038;
+    --accent: #4cc3d0; --accent-soft: #15333a; --amber: #e2b340; --amber-soft: #3a2f12;
+    --green: #5cc674; --red: #f07167; --kbd: #232a32; --shadow: none;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+}
+body[data-lang="en"] .fr, body[data-lang="fr"] .en { display: none !important; }
+a { color: var(--accent); }
+header {
+  background: var(--panel); border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 5;
+}
+.top { max-width: 1080px; margin: 0 auto; padding: 14px 16px 0; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.logo { width: 38px; height: 38px; flex: none; }
+.brand { flex: 1; min-width: 200px; }
+.brand h1 { margin: 0; font-size: 1.25rem; letter-spacing: .01em; }
+.brand p { margin: 0; color: var(--muted); font-size: .9rem; }
+.lang { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.lang button {
+  border: 0; background: transparent; color: var(--muted); padding: 6px 12px; font: inherit; font-size: .85rem; cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+nav { max-width: 1080px; margin: 0 auto; padding: 8px 12px 0; display: flex; flex-wrap: wrap; gap: 2px; }
+nav a {
+  padding: 10px 14px; text-decoration: none; color: var(--muted); border-bottom: 3px solid transparent;
+  white-space: nowrap; font-weight: 600; font-size: .95rem;
+}
+nav a[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 48px; }
+.js .tab:not(.active) { display: none; }
+.tab > h2 { font-size: 1.6rem; margin: 8px 0 4px; }
+.lead { color: var(--muted); margin: 0 0 20px; max-width: 760px; }
+h3 { margin: 0 0 8px; font-size: 1.1rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px;
+  box-shadow: var(--shadow); min-width: 0;
+}
+.card.wide { grid-column: 1 / -1; }
+.card[id] { scroll-margin-top: calc(var(--head, 110px) + 64px); }
+/* the page buttons stay under the header while the Pages tab scrolls */
+.chips.sticky { position: sticky; top: var(--head, 110px); z-index: 4; background: var(--bg); margin: 0 -16px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.card p, .card ul, .card ol { margin: 6px 0; }
+.card ul, .card ol { padding-left: 1.2em; }
+.card li { margin: 3px 0; }
+.icon { display: inline-flex; width: 30px; height: 30px; border-radius: 8px; background: var(--accent-soft); color: var(--accent);
+  align-items: center; justify-content: center; margin-right: 8px; vertical-align: -8px; font-weight: 700; font-size: .95rem; }
+.note { border-left: 4px solid var(--amber); background: var(--amber-soft); padding: 10px 14px; border-radius: 6px; margin: 12px 0; }
+.good { border-left-color: var(--green); }
+.docs { font-size: .9rem; color: var(--muted); margin-top: 12px; }
+.docs::before { content: "📖 "; }
+kbd {
+  font: 600 .82rem/1 ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--kbd); border: 1px solid var(--line);
+  border-bottom-width: 2px; border-radius: 5px; padding: 3px 6px; white-space: nowrap;
+}
+code { font: .88rem ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--kbd); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+pre { background: var(--kbd); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 8px 0; }
+pre code { background: none; padding: 0; }
+table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
+.table-wrap { overflow-x: auto; }
+figure { margin: 4px 0 12px; }
+figure svg { width: 100%; height: auto; display: block; border-radius: 10px; }
+figcaption { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+.steps { counter-reset: s; list-style: none; padding-left: 0 !important; }
+.steps li { counter-increment: s; position: relative; padding-left: 34px; margin: 8px 0; }
+.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 4px 12px; font-size: .88rem; text-decoration: none; color: var(--text); }
+.chip:hover { border-color: var(--accent); }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
+footer div { max-width: 1080px; margin: 0 auto; padding: 18px 16px; }
+/* the drawings of the screens: a terminal is dark whatever the page theme */
+.term { font-family: ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace; font-size: 12px; }
+.term text { white-space: pre; }
+/* the app's own look: blue accent, filled tab and row highlight, Campbell colours */
+.t-bg { fill: #0c0c0c; } .t-fg { fill: #cccccc; } .t-wh { fill: #f2f2f2; } .t-dim { fill: #8a8a8a; }
+.t-cy { fill: #3a96dd; } .t-am { fill: #c19c00; } .t-gr { fill: #16c60c; } .t-rd { fill: #e74856; }
+.t-bl { fill: #3b78ff; } .t-mg { fill: #b4009e; } .t-yl { fill: #f9f1a5; }
+.t-sel { fill: #1f4f7a; } .t-tab { fill: #3a96dd; } .t-pop { fill: #141414; }
+.t-line { stroke: #3a96dd; stroke-width: 1.5; fill: none; } .t-grey { stroke: #5a5a5a; stroke-width: 1.2; fill: none; }
+.t-btn { fill: #3a96dd; } .t-btn-off { fill: none; stroke: #8a8a8a; }
+.d-box { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
+.d-acc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.d-warn { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1.5; }
+.d-ok { fill: var(--panel); stroke: var(--green); stroke-width: 1.5; }
+.d-text { fill: var(--text); font: 600 13px system-ui, sans-serif; }
+.d-small { fill: var(--muted); font: 12px system-ui, sans-serif; }
+.d-line { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.d-accline { stroke: var(--accent); stroke-width: 2; fill: none; }
+@media (max-width: 560px) { .brand p { display: none; } nav a { padding: 10px 10px; } }
+</style>
+</head>
+<body data-lang="en">
+<!-- shared pieces of the screen drawings: the app's pixel "MC" -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="mc-logo" fill="#3a96dd">
+      <path d="M0 0h8l6 9 6-9h8v32h-8V14l-6 8-6-8v18H0z"/>
+      <path d="M34 0h22v8H42v16h14v8H34z"/>
+    </g>
+    <!-- contact type icons, as the terminal draws 💬 chat and 📡 repeater (12 × 12) -->
+    <g id="ic-chat">
+      <path d="M1 1.5h10v6.5H5l-3 2.5V8H1z" fill="#e8e8e8"/>
+      <path d="M3 3.6h6M3 5.8h4.5" stroke="#555" stroke-width="1"/>
+    </g>
+    <g id="ic-rpt">
+      <path d="M1.5 3.5a5 5 0 0 0 6.5 6.5z" fill="#d0d0d0"/>
+      <path d="M4.8 6.7l2.6-2.6M5 11.5h-3" stroke="#d0d0d0" stroke-width="1.2"/>
+      <path d="M8.2 1.6a2.6 2.6 0 0 1 2.2 2.2M8.2 0a4.2 4.2 0 0 1 3.8 3.8" stroke="#16c60c" stroke-width="0.9" fill="none"/>
+    </g>
+  </defs>
+</svg>
+<header>
+  <div class="top">
+    <!-- the program's own icon (meshcore-manager/assets/icon.svg) -->
+    <svg class="logo" viewBox="16 16 224 224" aria-hidden="true">
+      <rect x="16" y="16" width="224" height="224" rx="52" fill="#06090C"/>
+      <polyline points="72,184 72,80 128,144 184,80 184,184" fill="none"
+                stroke="#38C6EE" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#38C6EE">
+        <circle cx="72" cy="80" r="21"/><circle cx="184" cy="80" r="21"/>
+        <circle cx="72" cy="184" r="21"/><circle cx="184" cy="184" r="21"/>
+      </g>
+      <circle cx="128" cy="144" r="21" fill="#FFB22E" stroke="#06090C" stroke-width="6"/>
+    </svg>
+    <div class="brand">
+      <h1>Meshcore Manager</h1>
+      <p class="en">Help: back up, restore and configure your MeshCore nodes</p>
+      <p class="fr">Aide : sauvegarder, restaurer et régler vos noeuds MeshCore</p>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-set-lang="fr" aria-pressed="false">Français</button>
+    </div>
+  </div>
+  <nav aria-label="Sections">
+    <a href="#start" data-tab="start"><span class="en">Start</span><span class="fr">Démarrer</span></a>
+    <a href="#pages" data-tab="pages"><span class="en">Pages</span><span class="fr">Pages</span></a>
+    <a href="#howto" data-tab="howto"><span class="en">How to</span><span class="fr">Comment faire</span></a>
+    <a href="#keys" data-tab="keys"><span class="en">Keys</span><span class="fr">Touches</span></a>
+    <a href="#files" data-tab="files"><span class="en">Files &amp; settings</span><span class="fr">Fichiers et réglages</span></a>
+    <a href="#problems" data-tab="problems"><span class="en">Problems</span><span class="fr">Problèmes</span></a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============================================================ START -->
+<section class="tab" id="start">
+  <h2><span class="en">Start</span><span class="fr">Démarrer</span></h2>
+  <p class="lead en">A terminal app for your MeshCore nodes: companions, repeaters, room servers and sensors. It finds them on its own, backs them up, restores them, and changes their settings, one node or many at once.</p>
+  <p class="lead fr">Une appli en terminal pour vos noeuds MeshCore : compagnons, répéteurs, salons (room servers) et capteurs. Elle les trouve toute seule, les sauvegarde, les restaure et change leurs réglages, un noeud ou plusieurs d'un coup.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 250" role="img" aria-label="How it connects">
+      <rect x="250" y="80" width="220" height="80" rx="12" class="d-acc"/>
+      <text x="360" y="114" text-anchor="middle" class="d-text">Meshcore Manager</text>
+      <text x="360" y="136" text-anchor="middle" class="d-small en">on your PC</text>
+      <text x="360" y="136" text-anchor="middle" class="d-small fr">sur votre PC</text>
+
+      <rect x="20" y="30" width="160" height="44" rx="10" class="d-box"/>
+      <text x="100" y="57" text-anchor="middle" class="d-text en">Companion</text>
+      <text x="100" y="57" text-anchor="middle" class="d-text fr">Compagnon</text>
+      <rect x="20" y="98" width="160" height="44" rx="10" class="d-box"/>
+      <text x="100" y="125" text-anchor="middle" class="d-text en">Repeater</text>
+      <text x="100" y="125" text-anchor="middle" class="d-text fr">Répéteur</text>
+      <rect x="20" y="166" width="160" height="44" rx="10" class="d-box"/>
+      <text x="100" y="187" text-anchor="middle" class="d-text en">Room server / sensor</text>
+      <text x="100" y="187" text-anchor="middle" class="d-text fr">Salon / capteur</text>
+      <path d="M180 52 C215 52 215 110 250 110 M180 120 H250 M180 188 C215 188 215 130 250 130" class="d-line"/>
+      <text x="215" y="232" text-anchor="middle" class="d-small">USB</text>
+
+      <rect x="560" y="98" width="140" height="44" rx="10" class="d-box"/>
+      <text x="630" y="125" text-anchor="middle" class="d-text en">Companion</text>
+      <text x="630" y="125" text-anchor="middle" class="d-text fr">Compagnon</text>
+      <path d="M490 120 h50" class="d-line" stroke-dasharray="4 5"/>
+      <path d="M506 106 a20 20 0 0 1 0 28 M516 98 a32 32 0 0 1 0 44" class="d-accline"/>
+      <text x="515" y="88" text-anchor="middle" class="d-small">Bluetooth</text>
+
+      <rect x="270" y="196" width="180" height="44" rx="10" class="d-box"/>
+      <text x="360" y="215" text-anchor="middle" class="d-text">mcmanager-data</text>
+      <text x="360" y="232" text-anchor="middle" class="d-small en">backups, contacts, settings</text>
+      <text x="360" y="232" text-anchor="middle" class="d-small fr">sauvegardes, contacts, réglages</text>
+      <path d="M360 160 V196" class="d-line"/>
+    </svg>
+  </figure>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Windows</h3>
+      <ol class="steps en">
+        <li>Download <code>mcmanager-…-windows-x64.zip</code> from the <a href="https://github.com/Fed1291/meshcore-manager/releases">Releases</a> page.</li>
+        <li>Unzip it anywhere (a USB stick works).</li>
+        <li>Run <code>mcmanager.exe</code>. Windows Terminal looks best.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Téléchargez <code>mcmanager-…-windows-x64.zip</code> sur la page <a href="https://github.com/Fed1291/meshcore-manager/releases">Releases</a>.</li>
+        <li>Dézippez où vous voulez (une clé USB marche).</li>
+        <li>Lancez <code>mcmanager.exe</code>. Le rendu est meilleur dans Windows Terminal.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Linux</h3>
+      <ol class="steps en">
+        <li>Download <code>linux-x86_64</code> (PC) or <code>linux-arm64</code> (Raspberry Pi, 64-bit ARM).</li>
+        <li>Unpack: <code>tar xzf mcmanager-*.tar.gz</code>, then run <code>./mcmanager</code>.</li>
+        <li>For USB, once: <code>sudo usermod -aG dialout "$USER"</code> (Arch: <code>uucp</code>), then log out and back in.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Téléchargez <code>linux-x86_64</code> (PC) ou <code>linux-arm64</code> (Raspberry Pi, ARM 64 bits).</li>
+        <li>Décompressez : <code>tar xzf mcmanager-*.tar.gz</code>, puis lancez <code>./mcmanager</code>.</li>
+        <li>Pour l'USB, une fois : <code>sudo usermod -aG dialout "$USER"</code> (Arch : <code>uucp</code>), puis déconnectez-vous et reconnectez-vous.</li>
+      </ol>
+      <p class="en">Bluetooth needs <code>bluetoothd</code> running (it is on desktops and Raspberry Pi OS).</p>
+      <p class="fr">Le Bluetooth a besoin de <code>bluetoothd</code> (il tourne sur les bureaux et Raspberry Pi OS).</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon">✓</span><span class="en">What your nodes need</span><span class="fr">Ce qu'il faut à vos noeuds</span></h3>
+      <ul class="en">
+        <li><b>Companion on USB:</b> the <b>USB</b> companion firmware. A Bluetooth or Wi-Fi firmware doesn't talk over USB.</li>
+        <li><b>Companion on Bluetooth:</b> it must advertise. One connected to a phone doesn't: disconnect it there first.</li>
+        <li><b>Repeater, room server, sensor:</b> USB (their text console).</li>
+      </ul>
+      <ul class="fr">
+        <li><b>Compagnon en USB :</b> le firmware compagnon <b>USB</b>. Un firmware Bluetooth ou Wi-Fi ne parle pas en USB.</li>
+        <li><b>Compagnon en Bluetooth :</b> il doit émettre des annonces. Connecté à un téléphone, il n'en émet pas : déconnectez-le d'abord.</li>
+        <li><b>Répéteur, salon, capteur :</b> en USB (leur console texte).</li>
+      </ul>
+      <p class="docs en">New to MeshCore? <a href="https://docs.meshcore.io/faq/#12-q-what-do-you-need-to-start-using-meshcore">What you need to start</a> · <a href="https://docs.meshcore.io/faq/">FAQ</a> (official docs)</p>
+      <p class="docs fr">Nouveau sur MeshCore ? <a href="https://docs.meshcore.io/faq/#12-q-what-do-you-need-to-start-using-meshcore">Ce qu'il faut pour commencer</a> · <a href="https://docs.meshcore.io/faq/">FAQ</a> (doc officielle, en anglais)</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card wide">
+      <h3><span class="en">The basics</span><span class="fr">Les bases</span></h3>
+      <div class="table-wrap"><table class="en">
+        <tr><td><b>Reading is free, writing asks</b></td><td>Opening, reading, comparing never change a node. Anything that writes first shows exactly what will change and asks. A change is sent once, never twice.</td></tr>
+        <tr><td><b>The key bar</b></td><td>The bottom line shows the keys that work right now, and only those.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Back one step: closes a box, stops typing, leaves edit mode, leaves a node.</td></tr>
+        <tr><td><kbd>x</kbd></td><td>Removes or deletes: always red, always asks first (twice for several things).</td></tr>
+        <tr><td><b>Questions</b></td><td>Buttons say what they do. <kbd>←</kbd> <kbd>→</kbd> choose, <kbd>Enter</kbd> presses, <kbd>Esc</kbd> = no.</td></tr>
+        <tr><td><b>Clock</b></td><td>A node clock more than 2 minutes behind is set when the node is read, as the MeshCore apps do. Shown in green, "clock updated". A clock ahead is never set back.</td></tr>
+        <tr><td><b>Secrets</b></td><td>Passwords and private keys show as dots until you press <kbd>s</kbd>. Never in the log.</td></tr>
+      </table>
+      <table class="fr">
+        <tr><td><b>Lire est libre, écrire demande</b></td><td>Ouvrir, lire, comparer ne change jamais un noeud. Tout ce qui écrit montre d'abord exactement ce qui va changer et demande. Un changement est envoyé une fois, jamais deux.</td></tr>
+        <tr><td><b>La barre des touches</b></td><td>La ligne du bas montre les touches qui marchent là où vous êtes, et seulement celles-là.</td></tr>
+        <tr><td><kbd>Échap</kbd></td><td>Revient d'un pas : ferme une fenêtre, arrête la saisie, quitte l'édition, quitte un noeud.</td></tr>
+        <tr><td><kbd>x</kbd></td><td>Retire ou supprime : toujours en rouge, demande toujours avant (deux fois pour plusieurs).</td></tr>
+        <tr><td><b>Questions</b></td><td>Les boutons disent ce qu'ils font. <kbd>←</kbd> <kbd>→</kbd> choisissent, <kbd>Entrée</kbd> valide, <kbd>Échap</kbd> = non.</td></tr>
+        <tr><td><b>Horloge</b></td><td>Une horloge de noeud en retard de plus de 2 minutes est réglée à la lecture, comme le font les applis MeshCore. Affiché en vert, « horloge mise à jour ». Une horloge en avance n'est jamais reculée.</td></tr>
+        <tr><td><b>Secrets</b></td><td>Mots de passe et clés privées sont masqués par des points jusqu'à <kbd>s</kbd>. Jamais dans les logs.</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PAGES -->
+<section class="tab" id="pages">
+  <h2>Pages</h2>
+  <p class="lead en"><kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> or <kbd>1</kbd>–<kbd>8</kbd> switch pages.</p>
+  <p class="lead fr"><kbd>Tab</kbd> / <kbd>Maj+Tab</kbd> ou <kbd>1</kbd>–<kbd>8</kbd> changent de page.</p>
+  <div class="chips sticky">
+    <a class="chip" href="#p-fleet"><span class="en">1 Fleet</span><span class="fr">1 Flotte</span></a>
+    <a class="chip" href="#p-node"><span class="en">A node</span><span class="fr">Un noeud</span></a>
+    <a class="chip" href="#p-edit"><span class="en">Edit mode</span><span class="fr">Mode édition</span></a>
+    <a class="chip" href="#p-group"><span class="en">Several nodes</span><span class="fr">Plusieurs noeuds</span></a>
+    <a class="chip" href="#p-backups"><span class="en">2 Backups</span><span class="fr">2 Sauvegardes</span></a>
+    <a class="chip" href="#p-contacts">3 Contacts</a>
+    <a class="chip" href="#p-regions"><span class="en">4 Regions</span><span class="fr">4 Régions</span></a>
+    <a class="chip" href="#p-settings"><span class="en">7 Settings</span><span class="fr">7 Réglages</span></a>
+    <a class="chip" href="#p-other"><span class="en">5 Boards · 6 Log · 8 Info</span><span class="fr">5 Appareils · 6 Logs · 8 Info</span></a>
+  </div>
+
+  <div class="card wide" id="p-fleet">
+    <h3><span class="en">Fleet: all your nodes</span><span class="fr">Flotte : tous vos noeuds</span></h3>
+    <figure>
+      <svg viewBox="0 0 860 352" role="img" aria-label="Fleet page" class="term">
+        <rect width="860" height="352" rx="8" class="t-bg"/>
+        <!-- header: pixel MC, name, (by ...), numbered tabs, the open one filled -->
+        <use href="#mc-logo" x="14" y="10"/>
+        <text x="80" y="24" class="t-cy" font-weight="700">Meshcore Manager</text>
+        <text x="80" y="41" class="t-dim">(by Fed1291)</text>
+        <rect x="224" y="12" width="60" height="16" class="t-tab"/>
+        <g class="en"><text x="228" y="24" fill="#0c0c0c" font-weight="700">1 Fleet</text>
+          <text x="298" y="24" class="t-dim">2 Backups</text><text x="376" y="24" class="t-dim">3 Contacts</text><text x="462" y="24" class="t-dim">4 Regions</text>
+          <text x="540" y="24" class="t-dim">5 Boards</text><text x="610" y="24" class="t-dim">6 Log</text><text x="660" y="24" class="t-dim">7 Settings</text><text x="746" y="24" class="t-dim">8 Info</text></g>
+        <g class="fr"><text x="228" y="24" fill="#0c0c0c" font-weight="700">1 Flotte</text>
+          <text x="298" y="24" class="t-dim">2 Sauvegardes</text><text x="402" y="24" class="t-dim">3 Contacts</text><text x="486" y="24" class="t-dim">4 Régions</text>
+          <text x="560" y="24" class="t-dim">5 Appareils</text><text x="646" y="24" class="t-dim">6 Logs</text><text x="700" y="24" class="t-dim">7 Réglages</text><text x="780" y="24" class="t-dim">8 Info</text></g>
+        <!-- the node list -->
+        <rect x="10" y="58" width="840" height="150" rx="3" class="t-line"/>
+        <rect x="20" y="51" width="290" height="14" class="t-bg"/>
+        <text x="24" y="62" class="t-cy en" font-weight="700">6 nodes  ·  Bluetooth: listening ·))</text>
+        <text x="24" y="62" class="t-cy fr" font-weight="700">6 noeuds  ·  Bluetooth : à l'écoute ·))</text>
+        <g class="t-dim en"><text x="24" y="80">link</text><text x="118" y="80">key</text><text x="160" y="80">kind</text><text x="252" y="80">name</text><text x="370" y="80">board</text><text x="596" y="80">firmware</text><text x="704" y="80">last backup</text></g>
+        <g class="t-dim fr"><text x="24" y="80">lien</text><text x="118" y="80">clé</text><text x="160" y="80">type</text><text x="252" y="80">nom</text><text x="370" y="80">appareil</text><text x="596" y="80">firmware</text><text x="704" y="80">dern. sauveg.</text></g>
+        <rect x="18" y="86" width="824" height="17" class="t-sel"/>
+        <g class="t-fg">
+          <text x="24" y="99"><tspan class="t-cy">USB</tspan> COM3</text><text x="118" y="99" class="t-wh" font-weight="700">A1B2</text><text x="252" y="99" class="t-wh">MyNode</text><text x="370" y="99">Heltec WiFi LoRa 32 V3</text><text x="596" y="99">v1.12.0</text><text x="704" y="99">2026-11-18 22:57</text>
+          <text x="24" y="118"><tspan class="t-cy">USB</tspan> COM4</text><text x="118" y="118" class="t-wh" font-weight="700">7F3C</text><text x="252" y="118">Pocket</text><text x="370" y="118">RAK WisBlock 4631</text><text x="596" y="118">v1.12.0</text><text x="704" y="118">2026-11-12 09:10</text>
+          <text x="24" y="137"><tspan class="t-cy">BLE</tspan> -61</text><text x="118" y="137" class="t-wh" font-weight="700">C0DE</text><text x="252" y="137">Mobile-BT</text><text x="370" y="137">Seeed SenseCAP T1000-E</text><text x="596" y="137">v1.12.0</text><text x="704" y="137" class="t-dim">-</text>
+          <text x="24" y="156"><tspan class="t-cy">USB</tspan> COM5</text><text x="118" y="156" class="t-wh" font-weight="700">5E21</text><text x="252" y="156">Repeater-1</text><text x="370" y="156">Seeed XIAO nRF52840</text><text x="596" y="156">v1.12.0</text><text x="704" y="156">2026-11-15 18:02</text>
+          <text x="24" y="175"><tspan class="t-cy">USB</tspan> COM7</text><text x="118" y="175" class="t-wh" font-weight="700">9A40</text><text x="252" y="175">Room-1</text><text x="370" y="175">Heltec Mesh Node T114</text><text x="596" y="175">v1.12.0</text><text x="704" y="175">2026-11-10 08:30</text>
+          <text x="24" y="194"><tspan class="t-cy">USB</tspan> COM8</text><text x="118" y="194" class="t-wh" font-weight="700">3B77</text><text x="252" y="194">Sensor-1</text><text x="370" y="194">RAK WisBlock 4631</text><text x="596" y="194">v1.12.0</text><text x="704" y="194" class="t-dim">-</text>
+        </g>
+        <g class="en"><text x="160" y="99" class="t-bl">companion</text><text x="160" y="118" class="t-bl">companion</text><text x="160" y="137" class="t-bl">companion</text><text x="160" y="156" class="t-gr">repeater</text><text x="160" y="175" class="t-mg">room server</text><text x="160" y="194" class="t-am">sensor</text></g>
+        <g class="fr"><text x="160" y="99" class="t-bl">compagnon</text><text x="160" y="118" class="t-bl">compagnon</text><text x="160" y="137" class="t-bl">compagnon</text><text x="160" y="156" class="t-gr">répéteur</text><text x="160" y="175" class="t-mg">salon</text><text x="160" y="194" class="t-am">capteur</text></g>
+        <!-- the selected node's details -->
+        <rect x="10" y="222" width="840" height="96" rx="3" class="t-grey"/>
+        <rect x="20" y="215" width="120" height="14" class="t-bg"/>
+        <text x="24" y="226" class="t-cy en" font-weight="700">Selected node</text>
+        <text x="24" y="226" class="t-cy fr" font-weight="700">Noeud choisi</text>
+        <g class="t-dim en"><text x="24" y="246">port</text><text x="24" y="263">USB</text><text x="24" y="280">board</text><text x="24" y="297">radio</text></g>
+        <g class="t-dim fr"><text x="24" y="246">port</text><text x="24" y="263">USB</text><text x="24" y="280">appareil</text><text x="24" y="297">radio</text></g>
+        <g class="t-fg"><text x="130" y="246">COM3</text><text x="130" y="263">303a:1001  ESP32-S3  (Heltec V3, T-Beam Supreme, Station G2...)</text><text x="130" y="280">Heltec WiFi LoRa 32 V3 (Heltec)</text><text x="130" y="297">915.8,250,10,5   (Australia)</text></g>
+        <text x="24" y="312" class="t-dim en">Enter: open the node (contacts, channels, backups...)</text>
+        <text x="24" y="312" class="t-dim fr">Entrée : ouvrir le noeud (contacts, canaux, sauvegardes...)</text>
+        <!-- key bar -->
+        <text x="14" y="338" class="en" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">Enter</tspan><tspan class="t-dim"> open   </tspan><tspan class="t-cy" font-weight="700">b</tspan><tspan class="t-dim"> back up   </tspan><tspan class="t-cy" font-weight="700">s</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">r</tspan><tspan class="t-dim"> scan it again   </tspan><tspan class="t-cy" font-weight="700">R</tspan><tspan class="t-dim"> scan all again   </tspan><tspan class="t-cy" font-weight="700">f</tspan><tspan class="t-dim"> show: all   </tspan><tspan class="t-cy" font-weight="700">o</tspan><tspan class="t-dim"> sort: link   </tspan><tspan class="t-cy" font-weight="700">q</tspan><tspan class="t-dim"> quit</tspan></text>
+        <text x="14" y="338" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">Entrée</tspan><tspan class="t-dim"> ouvrir   </tspan><tspan class="t-cy" font-weight="700">b</tspan><tspan class="t-dim"> sauver   </tspan><tspan class="t-cy" font-weight="700">s</tspan><tspan class="t-dim"> sélection   </tspan><tspan class="t-cy" font-weight="700">r</tspan><tspan class="t-dim"> le rescanner   </tspan><tspan class="t-cy" font-weight="700">R</tspan><tspan class="t-dim"> tout rescanner   </tspan><tspan class="t-cy" font-weight="700">f</tspan><tspan class="t-dim"> afficher : tous   </tspan><tspan class="t-cy" font-weight="700">q</tspan><tspan class="t-dim"> sortir</tspan></text>
+      </svg>
+      <figcaption class="en">Drawing with made-up nodes. The key column shows the start of each node's public key, to tell nodes with the same name apart.</figcaption>
+      <figcaption class="fr">Dessin avec des noeuds inventés. La colonne clé montre le début de la clé publique de chaque noeud, pour distinguer deux noeuds au même nom.</figcaption>
+    </figure>
+    <div class="table-wrap"><table class="en">
+      <tr><th>Key</th><th>Does</th></tr>
+      <tr><td><kbd>Enter</kbd></td><td>open the node</td></tr>
+      <tr><td><kbd>b</kbd></td><td>back up (the checked nodes, if any)</td></tr>
+      <tr><td><kbd>r</kbd> / <kbd>R</kbd></td><td>read this node again / all of them</td></tr>
+      <tr><td><kbd>o</kbd></td><td>sort: link, kind, name</td></tr>
+      <tr><td><kbd>f</kbd></td><td>show one kind only</td></tr>
+      <tr><td><kbd>s</kbd></td><td>select mode: <kbd>Space</kbd> checks one, <kbd>a</kbd> all or none, <kbd>Esc</kbd> leaves</td></tr>
+      <tr><td><kbd>e</kbd></td><td>with nodes checked (same kind): edit them together</td></tr>
+      <tr><td><kbd>p</kbd> / <kbd>u</kbd></td><td>Bluetooth companion: type its PIN / unpair it from this computer</td></tr>
+    </table>
+    <table class="fr">
+      <tr><th>Touche</th><th>Fait</th></tr>
+      <tr><td><kbd>Entrée</kbd></td><td>ouvrir le noeud</td></tr>
+      <tr><td><kbd>b</kbd></td><td>sauvegarder (les noeuds cochés, s'il y en a)</td></tr>
+      <tr><td><kbd>r</kbd> / <kbd>R</kbd></td><td>relire ce noeud / tous</td></tr>
+      <tr><td><kbd>o</kbd></td><td>trier : lien, type, nom</td></tr>
+      <tr><td><kbd>f</kbd></td><td>montrer un seul type</td></tr>
+      <tr><td><kbd>s</kbd></td><td>mode sélection : <kbd>Espace</kbd> en coche un, <kbd>a</kbd> tous ou aucun, <kbd>Échap</kbd> sort</td></tr>
+      <tr><td><kbd>e</kbd></td><td>avec des noeuds cochés (même type) : les modifier ensemble</td></tr>
+      <tr><td><kbd>p</kbd> / <kbd>u</kbd></td><td>compagnon Bluetooth : taper son PIN / le désappairer de cet ordinateur</td></tr>
+    </table></div>
+    <p class="en">A Bluetooth companion is read once, by itself, as soon as it's heard. The result shows in its line and on the Log page.</p>
+    <p class="fr">Un compagnon Bluetooth est lu une fois, tout seul, dès qu'il est entendu. Le résultat s'affiche sur sa ligne et dans la page Logs.</p>
+  </div>
+
+  <div class="card wide" id="p-node" style="margin-top:16px">
+    <h3><span class="en">A node (Enter in the Fleet)</span><span class="fr">Un noeud (Entrée dans la Flotte)</span></h3>
+    <figure>
+      <svg viewBox="0 0 860 420" role="img" aria-label="A node's overview" class="term">
+        <rect width="860" height="420" rx="8" class="t-bg"/>
+        <!-- the node's line: name, key, kind badge; board, firmware, link -->
+        <text x="16" y="22" class="t-wh">Hilltop-RPT</text><text x="112" y="22" class="t-wh">5E21</text>
+        <rect x="150" y="10" width="74" height="16" fill="#16c60c"/>
+        <text x="158" y="22" fill="#0c0c0c" font-weight="700" class="en">repeater</text>
+        <text x="158" y="22" fill="#0c0c0c" font-weight="700" class="fr">répéteur</text>
+        <text x="16" y="40" class="t-dim">Heltec Mesh Node T114 (Heltec)  ·  v1.12.0-abc1234 (Build: 01-Oct-2026)  ·  USB COM5</text>
+        <!-- its sections, with counts -->
+        <g class="en"><text x="30" y="66" class="t-cy" font-weight="700">Overview</text><text x="112" y="66" class="t-dim">Regions 3</text><text x="200" y="66" class="t-dim">Access 2</text><text x="282" y="66" class="t-dim">Backups 4</text></g>
+        <g class="fr"><text x="30" y="66" class="t-cy" font-weight="700">Résumé</text><text x="100" y="66" class="t-dim">Régions 3</text><text x="186" y="66" class="t-dim">Accès 2</text><text x="260" y="66" class="t-dim">Sauvegardes 4</text></g>
+        <!-- left: Info -->
+        <rect x="10" y="78" width="400" height="310" rx="3" class="t-grey"/>
+        <rect x="20" y="71" width="44" height="14" class="t-bg"/>
+        <text x="24" y="82" class="t-cy" font-weight="700">Info</text>
+        <g class="t-dim en"><text x="24" y="102">port</text><text x="24" y="119">USB</text><text x="24" y="153">hardware id</text><text x="24" y="170">board</text><text x="24" y="187">firmware</text><text x="24" y="204">public key</text><text x="24" y="238">radio</text><text x="24" y="255">last backup</text></g>
+        <g class="t-dim fr"><text x="24" y="102">port</text><text x="24" y="119">USB</text><text x="24" y="153">id matériel</text><text x="24" y="170">appareil</text><text x="24" y="187">firmware</text><text x="24" y="204">clé publique</text><text x="24" y="238">radio</text><text x="24" y="255">dern. sauvegarde</text></g>
+        <g class="t-fg"><text x="140" y="102">COM5</text><text x="140" y="119">239a:4405  nRF52840  (ThinkNode M1,</text><text x="148" y="136">MeshPocket, MeshTower V2)</text><text x="140" y="153">0123456789ABCDEF</text><text x="140" y="170">Heltec Mesh Node T114 (Heltec)</text><text x="140" y="187">v1.12.0-abc1234 (Build: 01-Oct-2026)</text><text x="140" y="204">5E21C4A98B3F07D2E61A9C40B85F3D7E</text><text x="140" y="221">2A64C19F08B7E35D2C9A1F46E0B83D57</text><text x="140" y="238">915.8,250,10,5   (Australia)</text><text x="140" y="255">2026-11-18 09:40   (4 backups)</text></g>
+        <!-- right: what the node says (focused panel) -->
+        <rect x="420" y="78" width="430" height="310" rx="3" class="t-line"/>
+        <rect x="430" y="71" width="104" height="14" class="t-bg"/>
+        <text x="434" y="82" class="t-cy en" font-weight="700">What it says</text>
+        <text x="434" y="82" class="t-cy fr" font-weight="700">Ce qu'il dit</text>
+        <path d="M432 98 h14 M530 98 H838" class="t-grey"/>
+        <text x="452" y="102" class="t-dim en">Settings</text><text x="452" y="102" class="t-dim fr">Réglages</text>
+        <g class="t-am"><text x="432" y="119">!</text><text x="432" y="136">!</text><text x="432" y="221">!</text><text x="432" y="306">!</text><text x="432" y="323">!</text></g>
+        <g class="t-fg">
+          <text x="446" y="119">radio</text><text x="640" y="119">915.8,250,10,5</text>
+          <text x="446" y="136">tx</text><text x="640" y="136">22</text>
+          <text x="446" y="153">name</text><text x="640" y="153">Hilltop-RPT</text>
+          <text x="446" y="170">lat</text><text x="640" y="170">0.0</text>
+          <text x="446" y="187">lon</text><text x="640" y="187">0.0</text>
+          <text x="446" y="204">guest.password</text><text x="640" y="204">••••••</text>
+          <text x="446" y="221">repeat</text><text x="640" y="221">on</text>
+          <text x="446" y="238">path.hash.mode</text><text x="640" y="238">0</text>
+          <text x="446" y="255">loop.detect</text><text x="640" y="255">minimal</text>
+          <text x="446" y="272">advert.interval</text><text x="640" y="272">120</text>
+          <text x="446" y="289">flood.max</text><text x="640" y="289">64</text>
+          <text x="446" y="306">prv.key</text><text x="640" y="306">••••••</text>
+          <text x="446" y="323">password</text><text x="640" y="323">••••••</text>
+        </g>
+        <path d="M432 340 h14 M540 340 H838" class="t-grey"/>
+        <text x="452" y="344" class="t-dim en">Read only</text><text x="452" y="344" class="t-dim fr">Lecture seule</text>
+        <g class="t-fg"><text x="446" y="361">clock</text><text x="640" y="361">09:15 - 19/11/2026 UTC</text><text x="446" y="378">freq</text><text x="640" y="378">915.8</text></g>
+        <!-- key bar -->
+        <text x="14" y="408" class="en" font-size="11"><tspan class="t-cy" font-weight="700">Esc</tspan><tspan class="t-dim"> back to the list   </tspan><tspan class="t-cy" font-weight="700">Tab</tspan><tspan class="t-dim"> section   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">←→</tspan><tspan class="t-dim"> other panel   </tspan><tspan class="t-cy" font-weight="700">e</tspan><tspan class="t-dim"> edit   </tspan><tspan class="t-cy" font-weight="700">r</tspan><tspan class="t-dim"> read again   </tspan><tspan class="t-cy" font-weight="700">b</tspan><tspan class="t-dim"> back up   </tspan><tspan class="t-cy" font-weight="700">s</tspan><tspan class="t-dim"> show secrets</tspan></text>
+        <text x="14" y="408" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">Échap</tspan><tspan class="t-dim"> retour à la liste   </tspan><tspan class="t-cy" font-weight="700">Tab</tspan><tspan class="t-dim"> section   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">←→</tspan><tspan class="t-dim"> autre volet   </tspan><tspan class="t-cy" font-weight="700">e</tspan><tspan class="t-dim"> éditer   </tspan><tspan class="t-cy" font-weight="700">r</tspan><tspan class="t-dim"> relire   </tspan><tspan class="t-cy" font-weight="700">b</tspan><tspan class="t-dim"> sauver   </tspan><tspan class="t-cy" font-weight="700">s</tspan><tspan class="t-dim"> afficher secrets</tspan></text>
+      </svg>
+      <figcaption class="en">A repeater's Overview: what the program knows on the left, what the node itself answers on the right. <b>!</b> marks settings that change how it transmits, or a secret. Made-up node.</figcaption>
+      <figcaption class="fr">Le résumé d'un répéteur : ce que le programme sait à gauche, ce que le noeud répond à droite. <b>!</b> marque les réglages qui changent sa façon d'émettre, ou un secret. Noeud inventé.</figcaption>
+    </figure>
+    <figure>
+      <svg viewBox="0 0 860 200" role="img" aria-label="A node's regions" class="term">
+        <rect width="860" height="200" rx="8" class="t-bg"/>
+        <text x="16" y="22" class="t-wh">Hilltop-RPT</text><text x="112" y="22" class="t-wh">5E21</text>
+        <rect x="150" y="10" width="74" height="16" fill="#16c60c"/>
+        <text x="158" y="22" fill="#0c0c0c" font-weight="700" class="en">repeater</text><text x="158" y="22" fill="#0c0c0c" font-weight="700" class="fr">répéteur</text>
+        <g class="en"><text x="30" y="50" class="t-dim">Overview</text><text x="112" y="50" class="t-cy" font-weight="700">Regions 3</text><text x="200" y="50" class="t-dim">Access 2</text><text x="282" y="50" class="t-dim">Backups 4</text></g>
+        <g class="fr"><text x="30" y="50" class="t-dim">Résumé</text><text x="100" y="50" class="t-cy" font-weight="700">Régions 3</text><text x="186" y="50" class="t-dim">Accès 2</text><text x="260" y="50" class="t-dim">Sauvegardes 4</text></g>
+        <rect x="10" y="62" width="840" height="104" rx="3" class="t-line"/>
+        <rect x="20" y="55" width="80" height="14" class="t-bg"/>
+        <text x="24" y="66" class="t-cy en" font-weight="700">3 regions</text><text x="24" y="66" class="t-cy fr" font-weight="700">3 régions</text>
+        <text x="24" y="84" class="t-dim en">name</text><text x="24" y="84" class="t-dim fr">nom</text><text x="620" y="84" class="t-dim">flood</text>
+        <rect x="18" y="90" width="824" height="17" class="t-sel"/>
+        <text x="24" y="103" class="t-wh">*</text>
+        <text x="44" y="103" class="t-dim en" font-weight="700">every packet with no region</text><text x="44" y="103" class="t-dim fr" font-weight="700">tout paquet sans région</text>
+        <g class="t-fg"><text x="44" y="122">north</text><text x="44" y="141">north-east</text><text x="44" y="160">south</text></g>
+        <g class="t-gr en"><text x="620" y="103">allowed</text><text x="620" y="122">allowed</text><text x="700" y="122">√ in your list</text><text x="620" y="141">allowed</text><text x="700" y="141">√ in your list</text><text x="700" y="160">√ in your list</text></g>
+        <g class="t-gr fr"><text x="620" y="103">permis</text><text x="620" y="122">permis</text><text x="700" y="122">√ dans la liste</text><text x="620" y="141">permis</text><text x="700" y="141">√ dans la liste</text><text x="700" y="160">√ dans la liste</text></g>
+        <text x="620" y="160" class="t-rd en">blocked</text><text x="620" y="160" class="t-rd fr">bloqué</text>
+        <text x="14" y="188" class="en" font-size="11"><tspan class="t-cy" font-weight="700">Esc</tspan><tspan class="t-dim"> back to the list   </tspan><tspan class="t-cy" font-weight="700">Tab</tspan><tspan class="t-dim"> section   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">+</tspan><tspan class="t-dim"> into my list   </tspan><tspan class="t-cy" font-weight="700">e</tspan><tspan class="t-dim"> edit</tspan></text>
+        <text x="14" y="188" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">Échap</tspan><tspan class="t-dim"> retour à la liste   </tspan><tspan class="t-cy" font-weight="700">Tab</tspan><tspan class="t-dim"> section   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">+</tspan><tspan class="t-dim"> dans ma liste   </tspan><tspan class="t-cy" font-weight="700">e</tspan><tspan class="t-dim"> éditer</tspan></text>
+      </svg>
+      <figcaption class="en">Regions section: <code>*</code> (packets with no region) first, then the node's regions, whether flood is allowed, and whether the name is in your own list.</figcaption>
+      <figcaption class="fr">Section Régions : <code>*</code> (paquets sans région) en premier, puis les régions du noeud, si le flood est permis, et si le nom est dans votre liste.</figcaption>
+    </figure>
+    <figure>
+      <svg viewBox="0 0 860 250" role="img" aria-label="Edit mode on the access list" class="term">
+        <rect width="860" height="250" rx="8" class="t-bg"/>
+        <text x="16" y="22" class="t-wh">Hilltop-RPT</text><text x="112" y="22" class="t-wh">5E21</text>
+        <rect x="150" y="10" width="74" height="16" fill="#16c60c"/>
+        <text x="158" y="22" fill="#0c0c0c" font-weight="700" class="en">repeater</text><text x="158" y="22" fill="#0c0c0c" font-weight="700" class="fr">répéteur</text>
+        <!-- edit mode badge -->
+        <rect x="240" y="10" width="62" height="16" fill="#c19c00"/><text x="248" y="22" fill="#0c0c0c" font-weight="700">CONFIG</text>
+        <rect x="302" y="10" width="150" height="16" fill="#5a5a5a"/>
+        <text x="308" y="22" class="t-wh en" font-weight="700">nothing changed yet</text><text x="308" y="22" class="t-wh fr" font-weight="700">rien de modifié</text>
+        <g class="en"><text x="30" y="50" class="t-dim">Overview</text><text x="112" y="50" class="t-dim">Regions 3</text><text x="200" y="50" class="t-cy" font-weight="700">Access 2</text><text x="282" y="50" class="t-dim">Backups 4</text></g>
+        <g class="fr"><text x="30" y="50" class="t-dim">Résumé</text><text x="100" y="50" class="t-dim">Régions 3</text><text x="186" y="50" class="t-cy" font-weight="700">Accès 2</text><text x="260" y="50" class="t-dim">Sauvegardes 4</text></g>
+        <rect x="10" y="62" width="840" height="86" rx="3" class="t-line"/>
+        <rect x="20" y="55" width="150" height="14" class="t-bg"/>
+        <text x="24" y="66" class="t-cy en" font-weight="700">Access list: 2 / 32</text><text x="24" y="66" class="t-cy fr" font-weight="700">Liste d'accès : 2 / 32</text>
+        <g class="t-dim en"><text x="24" y="84">name</text><text x="130" y="84">key</text><text x="800" y="84">role</text></g>
+        <g class="t-dim fr"><text x="24" y="84">nom</text><text x="130" y="84">clé</text><text x="800" y="84">rôle</text></g>
+        <rect x="18" y="90" width="824" height="17" class="t-sel"/>
+        <text x="24" y="103" class="t-cy">Base-Station</text><text x="130" y="103" class="t-wh">9F1E2D3C4B5A69788796A5B4C3D2E1F00F1E2D3C4B5A69788796A5B4C3D2E1F0</text><text x="800" y="103" class="t-am" font-weight="700">admin</text>
+        <text x="24" y="122" class="t-cy">Field-Unit</text><text x="130" y="122" class="t-fg">3C7A51E0D9B82F64A1C7E39058D2B6F43C7A51E0D9B82F64A1C7E39058D2B6F4</text>
+        <text x="740" y="122" class="t-gr en">read / write</text><text x="728" y="122" class="t-gr fr">lecture / écriture</text>
+        <rect x="10" y="160" width="840" height="58" rx="3" class="t-grey"/>
+        <rect x="20" y="153" width="60" height="14" class="t-bg"/>
+        <text x="24" y="164" class="t-cy en" font-weight="700">Access</text><text x="24" y="164" class="t-cy fr" font-weight="700">Accès</text>
+        <text x="24" y="184" class="t-fg en">Who may log in as what. Someone who logs in with the admin password is added by the node</text>
+        <text x="24" y="201" class="t-fg en">itself; guests are not kept. At most 32.</text>
+        <text x="24" y="184" class="t-fg fr">Qui peut se connecter, et comment. Qui se connecte avec le mot de passe admin est ajouté par</text>
+        <text x="24" y="201" class="t-fg fr">le noeud lui-même ; les invités ne sont pas gardés. 32 au plus.</text>
+        <text x="14" y="238" class="en" font-size="11"><tspan class="t-cy" font-weight="700">Esc</tspan><tspan class="t-dim"> leave edit   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">←→</tspan><tspan class="t-dim"> role   </tspan><tspan class="t-cy" font-weight="700">a</tspan><tspan class="t-dim"> add from contacts   </tspan><tspan class="t-cy" font-weight="700">x</tspan><tspan class="t-rd"> remove   </tspan><tspan class="t-cy" font-weight="700">c</tspan><tspan class="t-dim"> commit (0)</tspan></text>
+        <text x="14" y="238" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">Échap</tspan><tspan class="t-dim"> fin édition   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">←→</tspan><tspan class="t-dim"> rôle   </tspan><tspan class="t-cy" font-weight="700">a</tspan><tspan class="t-dim"> ajouter depuis les contacts   </tspan><tspan class="t-cy" font-weight="700">x</tspan><tspan class="t-rd"> retirer   </tspan><tspan class="t-cy" font-weight="700">c</tspan><tspan class="t-dim"> écrire (0)</tspan></text>
+      </svg>
+      <figcaption class="en">Edit mode (<kbd>e</kbd>): the yellow CONFIG badge says how many changes wait for the commit. Here, the access list of a repeater. Made-up keys.</figcaption>
+      <figcaption class="fr">Mode édition (<kbd>e</kbd>) : le badge jaune CONFIG dit combien de changements attendent l'écriture. Ici, la liste d'accès d'un répéteur. Clés inventées.</figcaption>
+    </figure>
+    <p class="en"><kbd>Tab</kbd> goes through its sections, <kbd>Esc</kbd> back to the Fleet. While a node is open, page keys do nothing: a stray key never leaves it.</p>
+    <p class="fr"><kbd>Tab</kbd> passe d'une section à l'autre, <kbd>Échap</kbd> revient à la Flotte. Tant qu'un noeud est ouvert, les touches de page ne font rien : une touche de travers ne le quitte jamais.</p>
+    <div class="table-wrap"><table class="en">
+      <tr><th>Section</th><th>Shows</th><th>Keys</th></tr>
+      <tr><td><b>Overview</b></td><td>Identity, radio, settings. A companion also shows battery, temperature, sensors, counters.</td><td><kbd>e</kbd> edit, <kbd>s</kbd> secrets, <kbd>r</kbd> read again, <kbd>b</kbd> back up, <kbd>←</kbd> info panel</td></tr>
+      <tr><td><b>Contacts</b></td><td>A companion's contacts, A to Z: ★, type, key, advertised name, your custom name.</td><td><kbd>/</kbd> search, <kbd>o</kbd> sort, <kbd>n</kbd> custom name, <kbd>*</kbd> favourite</td></tr>
+      <tr><td><b>Channels</b></td><td>A companion's channels (keys hidden).</td><td><kbd>e</kbd> then <kbd>Enter</kbd> rename, <kbd>x</kbd> remove</td></tr>
+      <tr><td><b>Regions</b></td><td>A repeater's or room server's regions (firmware 1.10+). Below a line, the regions of your list it doesn't have.</td><td><kbd>+</kbd> copy into your list</td></tr>
+      <tr><td><b>Access</b></td><td>Who may log in: each key and its role (read only, read / write, admin).</td><td><kbd>e</kbd> then <kbd>a</kbd> add people, <kbd>←</kbd> <kbd>→</kbd> role, <kbd>x</kbd> remove</td></tr>
+      <tr><td><b>Backups</b></td><td>This board's backups, newest first.</td><td><kbd>Enter</kbd> compare with the node now, <kbd>R</kbd> restore, <kbd>Space</kbd> check, <kbd>x</kbd> delete</td></tr>
+    </table>
+    <table class="fr">
+      <tr><th>Section</th><th>Montre</th><th>Touches</th></tr>
+      <tr><td><b>Résumé</b></td><td>Identité, radio, réglages. Un compagnon montre aussi batterie, température, capteurs, compteurs.</td><td><kbd>e</kbd> éditer, <kbd>s</kbd> secrets, <kbd>r</kbd> relire, <kbd>b</kbd> sauvegarder, <kbd>←</kbd> panneau d'infos</td></tr>
+      <tr><td><b>Contacts</b></td><td>Les contacts d'un compagnon, de A à Z : ★, type, clé, nom annoncé, votre nom perso.</td><td><kbd>/</kbd> chercher, <kbd>o</kbd> trier, <kbd>n</kbd> nom perso, <kbd>*</kbd> favori</td></tr>
+      <tr><td><b>Canaux</b></td><td>Les canaux d'un compagnon (clés masquées).</td><td><kbd>e</kbd> puis <kbd>Entrée</kbd> renommer, <kbd>x</kbd> retirer</td></tr>
+      <tr><td><b>Régions</b></td><td>Les régions d'un répéteur ou salon (firmware 1.10+). Sous une ligne, celles de votre liste qu'il n'a pas.</td><td><kbd>+</kbd> copier dans votre liste</td></tr>
+      <tr><td><b>Accès</b></td><td>Qui peut se connecter : chaque clé et son rôle (lecture seule, lecture / écriture, admin).</td><td><kbd>e</kbd> puis <kbd>a</kbd> ajouter des gens, <kbd>←</kbd> <kbd>→</kbd> rôle, <kbd>x</kbd> retirer</td></tr>
+      <tr><td><b>Sauvegardes</b></td><td>Les sauvegardes de cette carte, la plus récente en haut.</td><td><kbd>Entrée</kbd> comparer au noeud actuel, <kbd>R</kbd> restaurer, <kbd>Espace</kbd> cocher, <kbd>x</kbd> supprimer</td></tr>
+    </table></div>
+  </div>
+
+  <div class="grid">
+    <div class="card wide" id="p-edit">
+      <h3><span class="en">Edit mode</span><span class="fr">Mode édition</span></h3>
+      <figure>
+        <svg viewBox="0 0 860 400" role="img" aria-label="Edit mode" class="term">
+          <rect width="860" height="400" rx="8" class="t-bg"/>
+          <text x="16" y="22" class="t-wh">Hilltop-RPT</text><text x="112" y="22" class="t-wh">5E21</text>
+          <rect x="150" y="10" width="74" height="16" fill="#16c60c"/>
+          <text x="158" y="22" fill="#0c0c0c" font-weight="700" class="en">repeater</text><text x="158" y="22" fill="#0c0c0c" font-weight="700" class="fr">répéteur</text>
+          <rect x="240" y="10" width="62" height="16" fill="#c19c00"/><text x="248" y="22" fill="#0c0c0c" font-weight="700">CONFIG</text>
+          <rect x="302" y="10" width="150" height="16" fill="#5a5a5a"/>
+          <text x="308" y="22" class="t-wh en" font-weight="700">nothing changed yet</text><text x="308" y="22" class="t-wh fr" font-weight="700">rien de modifié</text>
+          <text x="16" y="40" class="t-dim">Heltec Mesh Node T114 (Heltec)  ·  v1.12.0-abc1234 (Build: 01-Oct-2026)  ·  USB COM5</text>
+          <g class="en"><text x="30" y="66" class="t-cy" font-weight="700">Overview</text><text x="112" y="66" class="t-dim">Regions 3</text><text x="200" y="66" class="t-dim">Access 2</text><text x="282" y="66" class="t-dim">Backups 4</text></g>
+          <g class="fr"><text x="30" y="66" class="t-cy" font-weight="700">Résumé</text><text x="100" y="66" class="t-dim">Régions 3</text><text x="186" y="66" class="t-dim">Accès 2</text><text x="260" y="66" class="t-dim">Sauvegardes 4</text></g>
+          <!-- left: the settings, one per line -->
+          <rect x="10" y="78" width="460" height="290" rx="3" class="t-line"/>
+          <rect x="20" y="71" width="120" height="14" class="t-bg"/>
+          <text x="24" y="82" class="t-cy en" font-weight="700">Settings: edit</text><text x="24" y="82" class="t-cy fr" font-weight="700">Réglages : édition</text>
+          <rect x="18" y="89" width="342" height="17" class="t-sel"/>
+          <g class="t-am"><text x="22" y="102">!</text><text x="22" y="119">!</text><text x="22" y="204">!</text><text x="22" y="340">!</text><text x="22" y="357">!</text></g>
+          <g class="t-fg">
+            <text x="36" y="102" class="t-wh">radio</text><text x="214" y="102" class="t-wh">915.8,250,10,5</text>
+            <text x="36" y="119">tx</text><text x="214" y="119">22</text>
+            <text x="36" y="136">name</text><text x="214" y="136">Hilltop-RPT</text>
+            <text x="36" y="153">lat</text><text x="214" y="153">0.0</text>
+            <text x="36" y="170">lon</text><text x="214" y="170">0.0</text>
+            <text x="36" y="187">guest.password</text><text x="214" y="187">••••••</text>
+            <text x="36" y="204">repeat</text><text x="214" y="204">on</text>
+            <text x="36" y="221">path.hash.mode</text><text x="214" y="221">0</text>
+            <text x="36" y="238">loop.detect</text><text x="214" y="238">minimal</text>
+            <text x="36" y="255">txdelay</text><text x="214" y="255">0.5</text>
+            <text x="36" y="272">dutycycle</text><text x="214" y="272">50.0%</text>
+            <text x="36" y="289">advert.interval</text><text x="214" y="289">120</text>
+            <text x="36" y="306">flood.max</text><text x="214" y="306">64</text>
+            <text x="36" y="323">multi.acks</text><text x="214" y="323">0</text>
+            <text x="36" y="340">prv.key</text><text x="214" y="340">••••••</text>
+            <text x="36" y="357">password</text><text x="214" y="357">••••••</text>
+          </g>
+          <!-- right: the selected setting, from the help -->
+          <rect x="480" y="78" width="370" height="290" rx="3" class="t-grey"/>
+          <rect x="490" y="71" width="140" height="14" class="t-bg"/>
+          <text x="494" y="82" class="t-cy en" font-weight="700">Selected setting</text><text x="494" y="82" class="t-cy fr" font-weight="700">Réglage choisi</text>
+          <g class="en">
+            <text x="494" y="102" class="t-wh">Radio parameters</text><text x="494" y="119" class="t-dim">radio</text>
+            <text x="494" y="143" class="t-fg">Frequency (MHz), bandwidth (kHz), spreading</text>
+            <text x="494" y="160" class="t-fg">factor and coding rate, written as freq,bw,sf,cr.</text>
+            <text x="494" y="177" class="t-fg">Every node of the mesh must use the same.</text>
+            <text x="494" y="201" class="t-dim">values</text><text x="510" y="218" class="t-fg">&lt;freq&gt;,&lt;bw&gt;,&lt;sf&gt;,&lt;cr&gt;</text>
+            <text x="494" y="235" class="t-dim">now</text><text x="510" y="252" class="t-fg">915.8,250,10,5</text>
+            <text x="494" y="269" class="t-dim">default</text><text x="510" y="286" class="t-fg">869.618,62.5,8,5</text>
+            <text x="494" y="303" class="t-dim">preset</text><text x="510" y="320" class="t-fg">Australia</text>
+            <text x="494" y="344" class="t-am">! Changing them cuts the node off from a mesh</text>
+            <text x="494" y="361" class="t-am">  that keeps the old settings.</text>
+          </g>
+          <g class="fr">
+            <text x="494" y="102" class="t-wh">Paramètres radio</text><text x="494" y="119" class="t-dim">radio</text>
+            <text x="494" y="143" class="t-fg">Fréquence (MHz), bande passante (kHz), SF et CR,</text>
+            <text x="494" y="160" class="t-fg">écrits freq,bw,sf,cr. Tous les noeuds du mesh</text>
+            <text x="494" y="177" class="t-fg">doivent avoir les mêmes.</text>
+            <text x="494" y="201" class="t-dim">valeurs</text><text x="510" y="218" class="t-fg">&lt;freq&gt;,&lt;bw&gt;,&lt;sf&gt;,&lt;cr&gt;</text>
+            <text x="494" y="235" class="t-dim">actuel</text><text x="510" y="252" class="t-fg">915.8,250,10,5</text>
+            <text x="494" y="269" class="t-dim">défaut</text><text x="510" y="286" class="t-fg">869.618,62.5,8,5</text>
+            <text x="494" y="303" class="t-dim">préréglage</text><text x="510" y="320" class="t-fg">Australia</text>
+            <text x="494" y="344" class="t-am">! Les changer coupe le noeud d'un mesh qui</text>
+            <text x="494" y="361" class="t-am">  garde les anciens réglages.</text>
+          </g>
+          <text x="14" y="388" class="en" font-size="11"><tspan class="t-cy" font-weight="700">Esc</tspan><tspan class="t-dim"> leave edit   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">Enter</tspan><tspan class="t-dim"> change   </tspan><tspan class="t-cy" font-weight="700">?</tspan><tspan class="t-dim"> help   </tspan><tspan class="t-cy" font-weight="700">p</tspan><tspan class="t-dim"> radio presets   </tspan><tspan class="t-cy" font-weight="700">s</tspan><tspan class="t-dim"> show secrets   </tspan><tspan class="t-cy" font-weight="700">c</tspan><tspan class="t-dim"> commit (0)</tspan></text>
+          <text x="14" y="388" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">Échap</tspan><tspan class="t-dim"> fin édition   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">Entrée</tspan><tspan class="t-dim"> modifier   </tspan><tspan class="t-cy" font-weight="700">?</tspan><tspan class="t-dim"> aide   </tspan><tspan class="t-cy" font-weight="700">p</tspan><tspan class="t-dim"> préréglages   </tspan><tspan class="t-cy" font-weight="700">s</tspan><tspan class="t-dim"> afficher secrets   </tspan><tspan class="t-cy" font-weight="700">c</tspan><tspan class="t-dim"> écrire (0)</tspan></text>
+        </svg>
+        <figcaption class="en">Edit mode on a repeater: every setting it has on the left, what the selected one does on the right (written from the MeshCore firmware). Made-up node.</figcaption>
+        <figcaption class="fr">Mode édition sur un répéteur : chaque réglage à gauche, ce que fait celui choisi à droite (écrit à partir du firmware MeshCore). Noeud inventé.</figcaption>
+      </figure>
+      <ul class="en">
+        <li><kbd>e</kbd> in a node's section. You stay there until <kbd>Esc</kbd> (it asks if you have changes).</li>
+        <li><kbd>Enter</kbd> on a setting: pick with <kbd>←</kbd> <kbd>→</kbd>, or type. Limits show while you type ("3 / 15 characters").</li>
+        <li><kbd>?</kbd> all about the setting: what it does, values, default, since which firmware.</li>
+        <li><kbd>p</kbd> radio presets of the official MeshCore apps, by country.</li>
+        <li><kbd>u</kbd> undo, <kbd>U</kbd> redo.</li>
+        <li><kbd>c</kbd> commit: every change listed, then <b>back up, then write</b> or <b>write it now</b>.</li>
+      </ul>
+      <ul class="fr">
+        <li><kbd>e</kbd> dans une section d'un noeud. Vous y restez jusqu'à <kbd>Échap</kbd> (qui demande s'il y a des changements).</li>
+        <li><kbd>Entrée</kbd> sur un réglage : choix avec <kbd>←</kbd> <kbd>→</kbd>, ou saisie. Les limites s'affichent pendant la frappe (« 3 / 15 caractères »).</li>
+        <li><kbd>?</kbd> tout sur le réglage : ce qu'il fait, valeurs, défaut, depuis quel firmware.</li>
+        <li><kbd>p</kbd> préréglages radio des applis MeshCore officielles, par pays.</li>
+        <li><kbd>u</kbd> annuler, <kbd>U</kbd> refaire.</li>
+        <li><kbd>c</kbd> écrire : chaque changement listé, puis <b>sauver, puis écrire</b> ou <b>l'écrire</b>.</li>
+      </ul>
+      <p class="docs en">Every setting in the official docs: <a href="https://docs.meshcore.io/cli_commands/#configuration">CLI commands</a> · radio: <a href="https://docs.meshcore.io/faq/#51-q-what-are-bw-sf-and-cr">what are BW, SF and CR?</a></p>
+      <p class="docs fr">Chaque réglage dans la doc officielle (en anglais) : <a href="https://docs.meshcore.io/cli_commands/#configuration">commandes CLI</a> · radio : <a href="https://docs.meshcore.io/faq/#51-q-what-are-bw-sf-and-cr">BW, SF et CR ?</a></p>
+    </div>
+    <div class="card wide" id="p-group">
+      <h3><span class="en">Several nodes at once (group edit)</span><span class="fr">Plusieurs noeuds d'un coup (édition groupée)</span></h3>
+      <figure>
+        <svg viewBox="0 0 860 330" role="img" aria-label="Group edit" class="term">
+          <rect width="860" height="330" rx="8" class="t-bg"/>
+          <text x="16" y="22" class="t-wh en">3 × repeater</text><text x="16" y="22" class="t-wh fr">3 × répéteur</text>
+          <rect x="130" y="10" width="62" height="16" fill="#c19c00"/><text x="138" y="22" fill="#0c0c0c" font-weight="700">CONFIG</text>
+          <rect x="192" y="10" width="140" height="16" fill="#5a5a5a"/>
+          <text x="198" y="22" class="t-wh en" font-weight="700">1 change not sent</text><text x="198" y="22" class="t-wh fr" font-weight="700">1 modif non envoyée</text>
+          <text x="16" y="40" class="t-dim">Hilltop-RPT  ·  Ridge-RPT  ·  Valley-Relay</text>
+          <!-- left: the settings they all have -->
+          <rect x="10" y="62" width="460" height="226" rx="3" class="t-line"/>
+          <rect x="20" y="55" width="150" height="14" class="t-bg"/>
+          <text x="24" y="66" class="t-cy en" font-weight="700">Settings: edit</text><text x="24" y="66" class="t-cy fr" font-weight="700">Réglages : édition</text>
+          <rect x="18" y="91" width="442" height="17" class="t-sel"/>
+          <g class="t-am"><text x="22" y="87">!</text><text x="22" y="104">!</text><text x="22" y="138">!</text><text x="22" y="274">!</text></g>
+          <g class="t-fg">
+            <text x="36" y="87">radio</text><text x="36" y="104" class="t-wh">tx</text><text x="36" y="121">guest.password</text><text x="36" y="138">repeat</text>
+            <text x="36" y="155">path.hash.mode</text><text x="36" y="172">loop.detect</text><text x="36" y="189">txdelay</text><text x="36" y="206">dutycycle</text>
+            <text x="36" y="223">advert.interval</text><text x="36" y="240">flood.max</text><text x="36" y="257">multi.acks</text><text x="36" y="274">password</text>
+            <text x="214" y="121">••••••</text><text x="214" y="138">on</text><text x="214" y="155">0</text><text x="214" y="172">minimal</text>
+            <text x="214" y="189">0.5</text><text x="214" y="206">50.0%</text><text x="214" y="223">120</text><text x="214" y="240">64</text><text x="214" y="257">0</text><text x="214" y="274">••••••</text>
+          </g>
+          <text x="214" y="87" class="t-am en">2 different values</text><text x="214" y="87" class="t-am fr">2 valeurs différentes</text>
+          <text x="214" y="104" class="t-am" font-weight="700">22 → 20</text>
+          <!-- right: the selected setting, node by node -->
+          <rect x="480" y="62" width="370" height="226" rx="3" class="t-grey"/>
+          <rect x="490" y="55" width="130" height="14" class="t-bg"/>
+          <text x="494" y="66" class="t-cy en" font-weight="700">tx on each node</text><text x="494" y="66" class="t-cy fr" font-weight="700">tx sur chaque noeud</text>
+          <g class="t-dim en"><text x="494" y="87">node</text><text x="640" y="87">now</text><text x="700" y="87">after the commit</text></g>
+          <g class="t-dim fr"><text x="494" y="87">noeud</text><text x="640" y="87">actuel</text><text x="700" y="87">après l'écriture</text></g>
+          <g class="t-fg"><text x="494" y="106">Hilltop-RPT</text><text x="494" y="124">Ridge-RPT</text><text x="494" y="142">Valley-Relay</text>
+            <text x="640" y="106">22</text><text x="640" y="124">22</text><text x="640" y="142">22</text></g>
+          <g class="t-am" font-weight="700"><text x="700" y="106">20</text><text x="700" y="124">20</text><text x="700" y="142">20</text></g>
+          <text x="14" y="314" class="en" font-size="11"><tspan class="t-cy" font-weight="700">Esc</tspan><tspan class="t-dim"> leave edit   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">Enter</tspan><tspan class="t-dim"> change   </tspan><tspan class="t-cy" font-weight="700">p</tspan><tspan class="t-dim"> radio presets   </tspan><tspan class="t-cy" font-weight="700">a</tspan><tspan class="t-dim"> add a region   </tspan><tspan class="t-cy" font-weight="700">u</tspan><tspan class="t-dim"> undo   </tspan><tspan class="t-cy" font-weight="700">c</tspan><tspan class="t-dim"> commit (1)</tspan></text>
+          <text x="14" y="314" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">Échap</tspan><tspan class="t-dim"> fin édition   </tspan><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">Entrée</tspan><tspan class="t-dim"> modifier   </tspan><tspan class="t-cy" font-weight="700">p</tspan><tspan class="t-dim"> préréglages   </tspan><tspan class="t-cy" font-weight="700">a</tspan><tspan class="t-dim"> ajouter région   </tspan><tspan class="t-cy" font-weight="700">u</tspan><tspan class="t-dim"> undo   </tspan><tspan class="t-cy" font-weight="700">c</tspan><tspan class="t-dim"> écrire (1)</tspan></text>
+        </svg>
+        <figcaption class="en">Made-up repeaters. tx goes from 22 to 20 on all three; their radio settings differ, so it shows "2 different values".</figcaption>
+        <figcaption class="fr">Répéteurs inventés. tx passe de 22 à 20 sur les trois ; leurs réglages radio diffèrent, d'où « 2 valeurs différentes ».</figcaption>
+      </figure>
+      <p class="en">Same kind of nodes (all repeaters, say), same change, one commit. On <b>Fleet</b>: <kbd>Space</kbd> checks the nodes, <kbd>e</kbd> opens this.</p>
+      <p class="fr">Des noeuds du même type (tous des répéteurs, par exemple), le même changement, une seule écriture. Sur <b>Flotte</b> : <kbd>Espace</kbd> coche les noeuds, <kbd>e</kbd> ouvre ceci.</p>
+      <ul class="en">
+        <li>You get the settings they all have. Left out: what makes each node itself (name, private key, position).</li>
+        <li>The right panel shows the selected setting node by node: now, and after the commit ("no change" where it's already that).</li>
+        <li><kbd>p</kbd> one radio preset for all · <kbd>a</kbd> one region (with the ones above it) on every node; a node that has it already stays as it is.</li>
+        <li><kbd>c</kbd> lists the changes node by node, then writes each node (backed up first if you choose).</li>
+        <li>Access lists aren't in group edit: you fill them node by node (many people at once, see the Access drawing above).</li>
+      </ul>
+      <ul class="fr">
+        <li>Vous avez les réglages qu'ils ont tous. Sauf ce qui fait chaque noeud lui-même (nom, clé privée, position).</li>
+        <li>Le panneau de droite montre le réglage choisi noeud par noeud : actuel, et après l'écriture (« inchangé » là où c'est déjà ça).</li>
+        <li><kbd>p</kbd> un préréglage radio pour tous · <kbd>a</kbd> une région (avec celles au-dessus) sur chaque noeud ; un noeud qui l'a déjà reste tel quel.</li>
+        <li><kbd>c</kbd> liste les changements noeud par noeud, puis écrit chaque noeud (sauvegardé avant si vous le choisissez).</li>
+        <li>Les listes d'accès ne sont pas dans l'édition groupée : elles se remplissent noeud par noeud (plein de gens d'un coup, voir le dessin Accès plus haut).</li>
+      </ul>
+    </div>
+    <div class="card wide" id="p-backups">
+      <h3><span class="en">Backups</span><span class="fr">Sauvegardes</span></h3>
+      <figure>
+        <svg viewBox="0 0 860 300" role="img" aria-label="Backups page" class="term">
+          <rect width="860" height="300" rx="8" class="t-bg"/>
+          <!-- left: every board ever backed up -->
+          <rect x="10" y="14" width="330" height="250" rx="3" class="t-line"/>
+          <rect x="20" y="7" width="150" height="14" class="t-bg"/>
+          <text x="24" y="18" class="t-cy en" font-weight="700">Nodes  ·  <tspan class="t-gr">●</tspan> here now</text>
+          <text x="24" y="18" class="t-cy fr" font-weight="700">Noeuds  ·  <tspan class="t-gr">●</tspan> ici</text>
+          <rect x="18" y="26" width="314" height="17" class="t-sel"/>
+          <g class="t-fg">
+            <text x="24" y="39" class="t-gr">●</text><text x="40" y="39" class="t-wh" font-weight="700">5E21</text><text x="80" y="39" class="t-wh">Hilltop-RPT</text><text x="320" y="39" text-anchor="end">4</text>
+            <text x="24" y="58" class="t-dim">·</text><text x="40" y="58" font-weight="700">A1B2</text><text x="80" y="58">MyNode</text><text x="320" y="58" text-anchor="end">3</text>
+            <text x="24" y="77" class="t-dim">·</text><text x="40" y="77" font-weight="700">7F3C</text><text x="80" y="77">Pocket</text><text x="320" y="77" text-anchor="end">2</text>
+          </g>
+          <g class="en"><text x="200" y="39" class="t-gr">repeater</text><text x="200" y="58" class="t-bl">companion</text><text x="200" y="77" class="t-bl">companion</text></g>
+          <g class="fr"><text x="200" y="39" class="t-gr">répéteur</text><text x="200" y="58" class="t-bl">compagnon</text><text x="200" y="77" class="t-bl">compagnon</text></g>
+          <!-- right: its backups -->
+          <rect x="350" y="14" width="500" height="120" rx="3" class="t-grey"/>
+          <rect x="360" y="7" width="190" height="14" class="t-bg"/>
+          <text x="364" y="18" class="t-cy en" font-weight="700">Backups of Hilltop-RPT</text>
+          <text x="364" y="18" class="t-cy fr" font-weight="700">Sauvegardes de Hilltop-RPT</text>
+          <g class="t-dim en"><text x="390" y="36">date</text><text x="516" y="36">type</text><text x="630" y="36">contents</text><text x="790" y="36">state</text></g>
+          <g class="t-dim fr"><text x="390" y="36">date</text><text x="516" y="36">type</text><text x="662" y="36">contenu</text><text x="790" y="36">état</text></g>
+          <g class="t-fg"><text x="362" y="56" class="t-dim">[ ]</text><text x="390" y="56">2026-11-18 09:40</text>
+            <text x="362" y="74" class="t-dim">[ ]</text><text x="390" y="74">2026-11-15 18:02</text>
+            <text x="362" y="92" class="t-dim">[ ]</text><text x="390" y="92">2026-11-10 08:30</text>
+            <text x="362" y="110" class="t-dim">[ ]</text><text x="390" y="110">2026-11-02 21:12</text></g>
+          <g class="t-fg en"><text x="516" y="56">manual</text><text x="516" y="74">auto (edit)</text><text x="516" y="92">auto (restore)</text><text x="516" y="110">manual</text>
+            <text x="630" y="56">4 parts, 52 items</text><text x="630" y="74">4 parts, 52 items</text><text x="630" y="92">4 parts, 51 items</text><text x="630" y="110">4 parts, 49 items</text></g>
+          <g class="t-fg fr"><text x="516" y="56">manuelle</text><text x="516" y="74">auto (édition)</text><text x="516" y="92">auto (restauration)</text><text x="516" y="110">manuelle</text>
+            <text x="662" y="56">4 parties, 52</text><text x="662" y="74">4 parties, 52</text><text x="662" y="92">4 parties, 51</text><text x="662" y="110">4 parties, 49</text></g>
+          <g class="t-gr en"><text x="770" y="56">√ verified</text><text x="770" y="74">√ verified</text><text x="770" y="92">√ verified</text><text x="770" y="110">√ verified</text></g>
+          <g class="t-gr fr"><text x="770" y="56">√ vérifiée</text><text x="770" y="74">√ vérifiée</text><text x="770" y="92">√ vérifiée</text><text x="770" y="110">√ vérifiée</text></g>
+          <!-- the selected backup -->
+          <rect x="350" y="146" width="500" height="118" rx="3" class="t-grey"/>
+          <rect x="360" y="139" width="134" height="14" class="t-bg"/>
+          <text x="364" y="150" class="t-cy en" font-weight="700">Selected backup</text><text x="364" y="150" class="t-cy fr" font-weight="700">Sauvegarde choisie</text>
+          <g class="t-dim en"><text x="364" y="170">node</text><text x="364" y="187">made</text><text x="364" y="204">type</text><text x="364" y="221">contents</text></g>
+          <g class="t-dim fr"><text x="364" y="170">noeud</text><text x="364" y="187">faite</text><text x="364" y="204">type</text><text x="364" y="221">contenu</text></g>
+          <text x="450" y="170" class="t-fg en">Hilltop-RPT  (repeater)</text><text x="450" y="170" class="t-fg fr">Hilltop-RPT  (répéteur)</text>
+          <text x="450" y="187" class="t-fg">2026-11-18 09:40  (mcmanager 0.1.0, format 1)</text>
+          <text x="450" y="204" class="t-fg en">manual</text><text x="450" y="204" class="t-fg fr">manuelle</text>
+          <text x="450" y="221" class="t-fg en">settings 41   secrets 3 *   regions 3   access list</text>
+          <text x="450" y="221" class="t-fg fr">réglages 41   secrets 3 *   régions 3   liste d'accès</text>
+          <text x="364" y="240" class="t-dim en">* holds a private key, a channel key or a password</text>
+          <text x="364" y="240" class="t-dim fr">* contient une clé privée, une clé de canal ou un mot de passe</text>
+          <text x="14" y="288" class="en" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">←→</tspan><tspan class="t-dim"> nodes / backups   </tspan><tspan class="t-cy" font-weight="700">Enter</tspan><tspan class="t-dim"> its backups   </tspan><tspan class="t-cy" font-weight="700">x</tspan><tspan class="t-rd"> delete all its backups   </tspan><tspan class="t-cy" font-weight="700">f</tspan><tspan class="t-dim"> show: all   </tspan><tspan class="t-cy" font-weight="700">q</tspan><tspan class="t-dim"> quit</tspan></text>
+          <text x="14" y="288" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">←→</tspan><tspan class="t-dim"> noeuds / sauvegardes   </tspan><tspan class="t-cy" font-weight="700">Entrée</tspan><tspan class="t-dim"> ses sauvegardes   </tspan><tspan class="t-cy" font-weight="700">x</tspan><tspan class="t-rd"> supprimer toutes ses sauvegardes   </tspan><tspan class="t-cy" font-weight="700">f</tspan><tspan class="t-dim"> afficher : tous   </tspan><tspan class="t-cy" font-weight="700">q</tspan><tspan class="t-dim"> sortir</tspan></text>
+        </svg>
+      </figure>
+      <p class="en">Left: every board ever backed up, plugged in or not (<b>●</b> = here now). Right: its backups with date and type (<i>manual</i>, <i>auto (edit)</i>, <i>auto (restore)</i>).</p>
+      <p class="fr">À gauche : chaque carte déjà sauvegardée, branchée ou non (<b>●</b> = branchée). À droite : ses sauvegardes avec date et type (<i>manuelle</i>, <i>auto (édition)</i>, <i>auto (restauration)</i>).</p>
+      <ul class="en">
+        <li><kbd>←</kbd> <kbd>→</kbd> boards / backups</li>
+        <li><kbd>Enter</kbd> compare a backup with the node now</li>
+        <li><kbd>c</kbd> compare two backups · <kbd>R</kbd> restore</li>
+        <li><kbd>Space</kbd> / <kbd>a</kbd> check · <kbd>x</kbd> delete (asks, twice for several)</li>
+      </ul>
+      <ul class="fr">
+        <li><kbd>←</kbd> <kbd>→</kbd> cartes / sauvegardes</li>
+        <li><kbd>Entrée</kbd> comparer une sauvegarde au noeud actuel</li>
+        <li><kbd>c</kbd> comparer deux sauvegardes · <kbd>R</kbd> restaurer</li>
+        <li><kbd>Espace</kbd> / <kbd>a</kbd> cocher · <kbd>x</kbd> supprimer (demande, deux fois pour plusieurs)</li>
+      </ul>
+    </div>
+    <div class="card wide" id="p-contacts">
+      <h3>Contacts</h3>
+      <figure>
+        <svg viewBox="0 0 860 330" role="img" aria-label="Contacts page" class="term">
+          <rect width="860" height="330" rx="8" class="t-bg"/>
+          <text x="12" y="20" class="t-dim en">Every contact read from your companions and every key of an access list, kept here by itself</text>
+          <text x="12" y="36" class="t-dim en">(contacts.toml). A custom name and a role stay in this program only.</text>
+          <text x="12" y="20" class="t-dim fr">Chaque contact lu sur vos compagnons et chaque clé d'une liste d'accès, gardés ici tout seuls</text>
+          <text x="12" y="36" class="t-dim fr">(contacts.toml). Un nom perso et un rôle restent dans ce programme seulement.</text>
+          <rect x="10" y="56" width="840" height="140" rx="3" class="t-line"/>
+          <rect x="20" y="49" width="130" height="14" class="t-bg"/>
+          <text x="24" y="60" class="t-cy en" font-weight="700">6 keys  ·  name</text><text x="24" y="60" class="t-cy fr" font-weight="700">6 clés  ·  nom</text>
+          <g class="t-dim en"><text x="40" y="78">type</text><text x="150" y="78">key</text><text x="196" y="78">name</text><text x="380" y="78">custom name</text><text x="530" y="78">role</text><text x="660" y="78">on</text></g>
+          <g class="t-dim fr"><text x="40" y="78">type</text><text x="150" y="78">clé</text><text x="196" y="78">nom</text><text x="380" y="78">nom perso</text><text x="530" y="78">rôle</text><text x="680" y="78">sur</text></g>
+          <rect x="18" y="141" width="824" height="17" class="t-sel"/>
+          <g class="t-fg">
+            <text x="196" y="97">Hilltop-RPT</text><text x="150" y="97" class="t-wh" font-weight="700">5E21</text>
+            <text x="196" y="116">Ridge-RPT</text><text x="150" y="116" class="t-wh" font-weight="700">D81A</text>
+            <text x="196" y="135">Field-Unit</text><text x="150" y="135" class="t-wh" font-weight="700">B772</text><text x="380" y="135">Field</text>
+            <text x="196" y="154" class="t-wh">Base-Station</text><text x="150" y="154" class="t-wh" font-weight="700">9F1E</text><text x="380" y="154" class="t-wh">Base</text>
+            <text x="196" y="173">Valley-Relay</text><text x="150" y="173" class="t-wh" font-weight="700">9A40</text>
+            <text x="196" y="192">Trail-Walker</text><text x="150" y="192" class="t-wh" font-weight="700">6F0B</text>
+          </g>
+          <text x="22" y="135" class="t-am">★</text>
+          <use href="#ic-rpt" x="38" y="87"/><use href="#ic-rpt" x="38" y="106"/><use href="#ic-rpt" x="38" y="163"/>
+          <use href="#ic-chat" x="38" y="125"/><use href="#ic-chat" x="38" y="144"/><use href="#ic-chat" x="38" y="182"/>
+          <g class="en"><text x="56" y="97" class="t-gr">repeater</text><text x="56" y="116" class="t-gr">repeater</text><text x="56" y="135" class="t-bl">chat</text><text x="56" y="154" class="t-bl">chat</text><text x="56" y="173" class="t-gr">repeater</text><text x="56" y="192" class="t-bl">chat</text>
+            <text x="530" y="135" class="t-gr">read / write</text><text x="530" y="154" class="t-am">admin</text>
+            <g class="t-fg"><text x="660" y="97">on 2 companions</text><text x="660" y="116">on 1 companion</text><text x="660" y="135">on 2 companions</text><text x="660" y="154">on 2 companions</text><text x="660" y="173">on 1 companion</text><text x="660" y="192">on 1 companion</text></g></g>
+          <g class="fr"><text x="56" y="97" class="t-gr">répéteur</text><text x="56" y="116" class="t-gr">répéteur</text><text x="56" y="135" class="t-bl">chat</text><text x="56" y="154" class="t-bl">chat</text><text x="56" y="173" class="t-gr">répéteur</text><text x="56" y="192" class="t-bl">chat</text>
+            <text x="530" y="135" class="t-gr">lecture / écriture</text><text x="530" y="154" class="t-am">admin</text>
+            <g class="t-fg"><text x="680" y="97">sur 2 compagnons</text><text x="680" y="116">sur 1 compagnon</text><text x="680" y="135">sur 2 compagnons</text><text x="680" y="154">sur 2 compagnons</text><text x="680" y="173">sur 1 compagnon</text><text x="680" y="192">sur 1 compagnon</text></g></g>
+          <!-- the selected contact -->
+          <rect x="10" y="208" width="840" height="92" rx="3" class="t-grey"/>
+          <rect x="20" y="201" width="110" height="14" class="t-bg"/>
+          <text x="24" y="212" class="t-cy" font-weight="700">Base-Station</text>
+          <g class="t-dim en"><text x="24" y="232">public key</text><text x="24" y="249">advertises as</text><text x="24" y="266">last heard</text><text x="24" y="283">held by</text><text x="430" y="249">your role for it</text></g>
+          <g class="t-dim fr"><text x="24" y="232">clé publique</text><text x="24" y="249">s'annonce comme</text><text x="24" y="266">entendu</text><text x="24" y="283">sur</text><text x="430" y="249">votre rôle pour lui</text></g>
+          <g class="t-fg"><text x="150" y="232">9F1E2D3C4B5A69788796A5B4C3D2E1F00F1E2D3C4B5A69788796A5B4C3D2E1F0</text><text x="150" y="249">Base-Station</text><text x="150" y="266">2026-11-17 22:19  (1 d)</text><text x="150" y="283">MyNode, Pocket</text><text x="570" y="249">admin</text></g>
+          <text x="14" y="320" class="en" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">/</tspan><tspan class="t-dim"> search   </tspan><tspan class="t-cy" font-weight="700">n</tspan><tspan class="t-dim"> custom name   </tspan><tspan class="t-cy" font-weight="700">*</tspan><tspan class="t-dim"> favourite   </tspan><tspan class="t-cy" font-weight="700">r</tspan><tspan class="t-dim"> role   </tspan><tspan class="t-cy" font-weight="700">o</tspan><tspan class="t-dim"> sort: name   </tspan><tspan class="t-cy" font-weight="700">f</tspan><tspan class="t-dim"> show: all   </tspan><tspan class="t-cy" font-weight="700">Space</tspan><tspan class="t-dim"> check   </tspan><tspan class="t-cy" font-weight="700">x</tspan><tspan class="t-rd"> remove</tspan></text>
+          <text x="14" y="320" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">/</tspan><tspan class="t-dim"> chercher   </tspan><tspan class="t-cy" font-weight="700">n</tspan><tspan class="t-dim"> nom perso   </tspan><tspan class="t-cy" font-weight="700">*</tspan><tspan class="t-dim"> favori   </tspan><tspan class="t-cy" font-weight="700">r</tspan><tspan class="t-dim"> rôle   </tspan><tspan class="t-cy" font-weight="700">o</tspan><tspan class="t-dim"> trier : nom   </tspan><tspan class="t-cy" font-weight="700">f</tspan><tspan class="t-dim"> afficher : tous   </tspan><tspan class="t-cy" font-weight="700">Espace</tspan><tspan class="t-dim"> cocher   </tspan><tspan class="t-cy" font-weight="700">x</tspan><tspan class="t-rd"> retirer</tspan></text>
+        </svg>
+        <figcaption class="en">Made-up contacts. ★ = favourite. The custom name and the role are yours, kept in the program.</figcaption>
+        <figcaption class="fr">Contacts inventés. ★ = favori. Le nom perso et le rôle sont à vous, gardés dans le programme.</figcaption>
+      </figure>
+      <p class="en">Your address book, filled by itself each time a node is read: every contact of your companions, every key of an access list.</p>
+      <p class="fr">Votre carnet d'adresses, rempli tout seul à chaque lecture : chaque contact de vos compagnons, chaque clé d'une liste d'accès.</p>
+      <ul class="en">
+        <li><kbd>n</kbd> custom name (kept in the app: a companion always takes the advertised name)</li>
+        <li><kbd>*</kbd> favourite (written to the companions that hold it, asks first)</li>
+        <li><kbd>r</kbd> role: read only, read / write, admin</li>
+        <li><kbd>/</kbd> search · <kbd>o</kbd> sort · <kbd>f</kbd> filter · <kbd>x</kbd> out of the list (never off a node)</li>
+      </ul>
+      <ul class="fr">
+        <li><kbd>n</kbd> nom perso (gardé dans l'appli : un compagnon reprend toujours le nom annoncé)</li>
+        <li><kbd>*</kbd> favori (écrit dans les compagnons qui l'ont, demande avant)</li>
+        <li><kbd>r</kbd> rôle : lecture seule, lecture / écriture, admin</li>
+        <li><kbd>/</kbd> chercher · <kbd>o</kbd> trier · <kbd>f</kbd> filtrer · <kbd>x</kbd> retirer de la liste (jamais d'un noeud)</li>
+      </ul>
+    </div>
+    <div class="card" id="p-regions">
+      <h3><span class="en">Regions</span><span class="fr">Régions</span></h3>
+      <p class="en">Your own list of region names, in the firmware's format. A node's <code>region</code> output can be pasted as is.</p>
+      <p class="fr">Votre liste de noms de régions, au format du firmware. La sortie de la commande <code>region</code> d'un noeud se colle telle quelle.</p>
+      <p class="docs en">How regions work: <a href="https://docs.meshcore.io/cli_commands/#region-management-v110">official docs</a> (firmware 1.10 or later).</p>
+      <p class="docs fr">Comment marchent les régions : <a href="https://docs.meshcore.io/cli_commands/#region-management-v110">doc officielle</a> (en anglais, firmware 1.10 ou plus).</p>
+      <p class="en"><kbd>a</kbd> new under the selected one, <kbd>A</kbd> at the top, <kbd>x</kbd> remove (only from the list). In a node's edit mode: <kbd>Space</kbd> flood, <kbd>h</kbd> home, <kbd>d</kbd> default scope.</p>
+      <p class="fr"><kbd>a</kbd> nouveau sous celui sélectionné, <kbd>A</kbd> en haut, <kbd>x</kbd> retirer (seulement de la liste). En édition d'un noeud : <kbd>Espace</kbd> flood, <kbd>h</kbd> home, <kbd>d</kbd> portée par défaut.</p>
+    </div>
+    <div class="card wide" id="p-settings">
+      <h3><span class="en">Settings</span><span class="fr">Réglages</span></h3>
+      <figure>
+        <svg viewBox="0 0 860 470" role="img" aria-label="Settings page" class="term">
+          <rect width="860" height="470" rx="8" class="t-bg"/>
+          <use href="#mc-logo" x="14" y="10"/>
+          <text x="80" y="24" class="t-cy" font-weight="700">Meshcore Manager</text>
+          <g class="en"><text x="80" y="41" class="t-dim">(by Fed1291)</text>
+            <rect x="656" y="12" width="80" height="16" class="t-tab"/>
+            <text x="228" y="24" class="t-dim">1 Fleet</text><text x="298" y="24" class="t-dim">2 Backups</text><text x="376" y="24" class="t-dim">3 Contacts</text><text x="462" y="24" class="t-dim">4 Regions</text>
+            <text x="540" y="24" class="t-dim">5 Boards</text><text x="610" y="24" class="t-dim">6 Log</text><text x="660" y="24" fill="#0c0c0c" font-weight="700">7 Settings</text><text x="746" y="24" class="t-dim">8 Info</text></g>
+          <g class="fr"><text x="80" y="41" class="t-dim">(par Fed1291)</text>
+            <rect x="696" y="12" width="80" height="16" class="t-tab"/>
+            <text x="228" y="24" class="t-dim">1 Flotte</text><text x="298" y="24" class="t-dim">2 Sauvegardes</text><text x="402" y="24" class="t-dim">3 Contacts</text><text x="486" y="24" class="t-dim">4 Régions</text>
+            <text x="560" y="24" class="t-dim">5 Appareils</text><text x="646" y="24" class="t-dim">6 Logs</text><text x="700" y="24" fill="#0c0c0c" font-weight="700">7 Réglages</text><text x="786" y="24" class="t-dim">8 Info</text></g>
+          <g class="t-fg en"><text x="12" y="66">The settings of this program, saved in config.toml (each change is used at once). The nodes'</text><text x="12" y="82">own settings are in their view (Fleet, Enter).</text></g>
+          <g class="t-fg fr"><text x="12" y="66">Les réglages de ce programme, dans config.toml (chaque changement s'applique aussitôt). Les</text><text x="12" y="82">réglages des noeuds sont dans leur vue (Flotte, Enter).</text></g>
+          <!-- left: the settings -->
+          <rect x="10" y="104" width="560" height="332" rx="3" class="t-line"/>
+          <rect x="20" y="97" width="80" height="14" class="t-bg"/>
+          <text x="24" y="108" class="t-cy en" font-weight="700">Settings</text><text x="24" y="108" class="t-cy fr" font-weight="700">Réglages</text>
+          <g class="t-cy" font-weight="700">
+            <text x="30" y="128" class="en">DISPLAY</text><text x="30" y="128" class="fr">AFFICHAGE</text>
+            <text x="30" y="192" class="en">DIAGNOSTICS</text><text x="30" y="192" class="fr">DIAGNOSTIC</text>
+            <text x="30" y="256" class="en">BACKUPS</text><text x="30" y="256" class="fr">SAUVEGARDES</text>
+            <text x="30" y="320" class="en">BLUETOOTH</text><text x="30" y="320" class="fr">BLUETOOTH</text>
+            <text x="30" y="384" class="en">TRANSLATION</text><text x="30" y="384" class="fr">TRADUCTION</text>
+          </g>
+          <text x="30" y="145" class="t-cy">»</text>
+          <g class="t-wh en"><text x="46" y="145">Language</text><text x="46" y="209">Debug log</text><text x="46" y="273">Backups folder</text><text x="46" y="337">Pairing PIN</text><text x="46" y="401">Original files</text></g>
+          <g class="t-wh fr"><text x="46" y="145">Langue</text><text x="46" y="209">Log debug</text><text x="46" y="273">Dossier sauvegardes</text><text x="46" y="337">PIN d'appairage</text><text x="46" y="401">Fichiers d'origine</text></g>
+          <!-- language choice: the open one filled -->
+          <text x="66" y="164" class="t-cy">‹</text>
+          <g class="en"><rect x="82" y="152" width="146" height="16" class="t-tab"/><text x="88" y="164" fill="#0c0c0c" font-weight="700">automatic (English)</text>
+            <text x="244" y="164" class="t-dim">English</text><text x="312" y="164" class="t-dim">Français</text><text x="384" y="164" class="t-cy">›</text></g>
+          <g class="fr"><text x="82" y="164" class="t-dim">automatique (Français)</text><text x="256" y="164" class="t-dim">English</text>
+            <rect x="314" y="152" width="78" height="16" class="t-tab"/><text x="320" y="164" fill="#0c0c0c" font-weight="700">Français</text><text x="400" y="164" class="t-cy">›</text></g>
+          <!-- debug log: off -->
+          <rect x="66" y="216" width="70" height="16" fill="#5a5a5a"/>
+          <g class="en"><text x="72" y="228" class="t-dim">on</text><text x="102" y="228" class="t-wh" font-weight="700">off</text></g>
+          <g class="fr"><text x="72" y="228" class="t-dim">oui</text><text x="102" y="228" class="t-wh" font-weight="700">non</text></g>
+          <rect x="66" y="280" width="300" height="16" fill="#5a5a5a"/><text x="72" y="292" class="t-wh">C:\Apps\mcmanager\mcmanager-data\backups</text>
+          <rect x="66" y="344" width="64" height="16" fill="#5a5a5a"/><text x="72" y="356" class="t-wh">••••••</text>
+          <g class="en"><rect x="66" y="408" width="290" height="16" fill="#5a5a5a"/><text x="72" y="420" class="t-wh" font-weight="700">put the English and French files back</text></g>
+          <g class="fr"><rect x="66" y="408" width="320" height="16" fill="#5a5a5a"/><text x="72" y="420" class="t-wh" font-weight="700">remettre les fichiers anglais et français</text></g>
+          <!-- right: the selected setting -->
+          <rect x="580" y="104" width="270" height="332" rx="3" class="t-grey"/>
+          <rect x="590" y="97" width="64" height="14" class="t-bg"/>
+          <text x="594" y="108" class="t-cy en" font-weight="700">Selected</text><text x="594" y="108" class="t-cy fr" font-weight="700">Choisi</text>
+          <g class="t-fg en"><text x="592" y="130">The language of every text.</text><text x="592" y="147">Automatic: the system's, else</text><text x="592" y="164">English. A text a language lacks</text><text x="592" y="181">is shown in English.</text>
+            <text x="592" y="205" class="t-dim">Language files:</text><text x="592" y="222">C:\Apps\mcmanager\mcmanager-data</text><text x="592" y="239">\lang, one folder per language</text><text x="592" y="256">code (en, fr...) with its</text><text x="592" y="273">mcmanager.ftl. Copy one to start</text><text x="592" y="290">another language.</text>
+            <text x="592" y="322" class="t-dim">Settings file:</text><text x="592" y="339">C:\Apps\mcmanager\mcmanager-data</text><text x="592" y="356">\config.toml</text></g>
+          <g class="t-fg fr"><text x="592" y="130">La langue de tous les textes.</text><text x="592" y="147">Automatique : celle du système,</text><text x="592" y="164">sinon l'anglais. Un texte absent</text><text x="592" y="181">d'une langue s'affiche en anglais.</text>
+            <text x="592" y="205" class="t-dim">Fichiers de langue :</text><text x="592" y="222">C:\Apps\mcmanager\mcmanager-data</text><text x="592" y="239">\lang, un dossier par code (en,</text><text x="592" y="256">fr...) avec son mcmanager.ftl.</text><text x="592" y="273">Copiez-en un pour commencer une</text><text x="592" y="290">autre langue.</text>
+            <text x="592" y="322" class="t-dim">Fichier de réglages :</text><text x="592" y="339">C:\Apps\mcmanager\mcmanager-data</text><text x="592" y="356">\config.toml</text></g>
+          <text x="14" y="458" class="en" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> select   </tspan><tspan class="t-cy" font-weight="700">←→ Enter</tspan><tspan class="t-dim"> change   </tspan><tspan class="t-cy" font-weight="700">Tab</tspan><tspan class="t-dim"> switch   </tspan><tspan class="t-cy" font-weight="700">q</tspan><tspan class="t-dim"> quit</tspan></text>
+          <text x="14" y="458" class="fr" font-size="11"><tspan class="t-cy" font-weight="700">↑↓</tspan><tspan class="t-dim"> choisir   </tspan><tspan class="t-cy" font-weight="700">←→ Enter</tspan><tspan class="t-dim"> modifier   </tspan><tspan class="t-cy" font-weight="700">Tab</tspan><tspan class="t-dim"> changer   </tspan><tspan class="t-cy" font-weight="700">q</tspan><tspan class="t-dim"> sortir</tspan></text>
+        </svg>
+        <figcaption class="en"><code>C:\Apps\mcmanager</code> is an example: the folder where you put the program. Its <code>mcmanager-data</code> folder is created next to it, and this page shows its real path.</figcaption>
+        <figcaption class="fr"><code>C:\Apps\mcmanager</code> est un exemple : le dossier où vous avez mis le programme. Son dossier <code>mcmanager-data</code> est créé à côté, et cette page montre son vrai chemin.</figcaption>
+      </figure>
+      <ul class="en">
+        <li><b>Language</b>: <kbd>←</kbd> <kbd>→</kbd>, "Automatic" follows your system</li>
+        <li><b>Debug log</b>: a detailed log to find a problem (names, keys, positions masked)</li>
+        <li><b>Backups folder</b>: type or paste, or <kbd>o</kbd> for the folder window; tested, then copy / move / leave the old backups. All or nothing: <b>Move</b> removes the old ones only once every copy is checked and the new folder saved; any failure changes nothing</li>
+        <li><b>Pairing PIN</b>: tried first with a Bluetooth companion (default <code>123456</code>)</li>
+        <li><b>Original files</b>: puts the original language files back</li>
+      </ul>
+      <ul class="fr">
+        <li><b>Langue</b> : <kbd>←</kbd> <kbd>→</kbd>, « Automatique » suit votre système</li>
+        <li><b>Log debug</b> : pour trouver un problème (noms, clés, positions masqués)</li>
+        <li><b>Dossier des sauvegardes</b> : tapez ou collez, ou <kbd>o</kbd> pour la fenêtre de choix ; testé, puis copier / déplacer / laisser les anciennes. Tout ou rien : <b>Déplacer</b> ne retire les anciennes qu'une fois chaque copie vérifiée et le nouveau dossier enregistré ; un échec ne change rien</li>
+        <li><b>PIN d'appairage</b> : essayé d'abord avec un compagnon Bluetooth (défaut <code>123456</code>)</li>
+        <li><b>Fichiers d'origine</b> : remet les fichiers de langue d'origine</li>
+      </ul>
+      <p class="en">Your language isn't there? <a href="#h-translate">Translate it</a>: just text files.</p>
+      <p class="fr">Votre langue n'y est pas ? <a href="#h-translate">Traduisez-la</a> : juste des fichiers texte.</p>
+    </div>
+    <div class="card" id="p-other">
+      <h3><span class="en">Boards, Log, Info</span><span class="fr">Appareils, Logs, Info</span></h3>
+      <ul class="en">
+        <li><b>Boards</b>: the boards the app knows and their USB ids. A board in flash mode is never written to.</li>
+        <li><b>Log</b>: everything since the start, newest at the bottom.</li>
+        <li><b>Info</b>: version and license.</li>
+      </ul>
+      <ul class="fr">
+        <li><b>Appareils</b> : les cartes que l'appli connaît et leurs ids USB. Une carte en mode flash n'est jamais écrite.</li>
+        <li><b>Logs</b> : tout depuis le lancement, le plus récent en bas.</li>
+        <li><b>Info</b> : version et licence.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ HOW TO -->
+<section class="tab" id="howto">
+  <h2><span class="en">How to</span><span class="fr">Comment faire</span></h2>
+  <p class="lead en">The everyday tasks, step by step.</p>
+  <p class="lead fr">Les tâches de tous les jours, pas à pas.</p>
+
+  <div class="grid">
+    <div class="card wide" id="h-backup">
+      <h3><span class="icon">b</span><span class="en">Back up a node</span><span class="fr">Sauvegarder un noeud</span></h3>
+      <figure>
+        <svg viewBox="0 0 720 120" role="img" aria-label="Backup">
+          <rect x="10" y="30" width="150" height="56" rx="10" class="d-box"/>
+          <text x="85" y="55" text-anchor="middle" class="d-text">MyNode</text>
+          <text x="85" y="73" text-anchor="middle" class="d-small en">on USB or Bluetooth</text>
+          <text x="85" y="73" text-anchor="middle" class="d-small fr">en USB ou Bluetooth</text>
+          <path d="M160 58 H240" class="d-line"/><path d="M232 52 l8 6 -8 6" class="d-line"/>
+          <text x="200" y="48" text-anchor="middle" class="d-small en">read</text>
+          <text x="200" y="48" text-anchor="middle" class="d-small fr">lecture</text>
+          <rect x="240" y="30" width="170" height="56" rx="10" class="d-acc"/>
+          <text x="325" y="55" text-anchor="middle" class="d-text en">its last reading</text>
+          <text x="325" y="55" text-anchor="middle" class="d-text fr">sa dernière lecture</text>
+          <text x="325" y="73" text-anchor="middle" class="d-small en">kept in the app</text>
+          <text x="325" y="73" text-anchor="middle" class="d-small fr">gardée dans l'appli</text>
+          <path d="M410 58 H490" class="d-accline"/><path d="M482 52 l8 6 -8 6" class="d-accline"/>
+          <text x="450" y="48" text-anchor="middle" class="d-text">b</text>
+          <rect x="490" y="30" width="220" height="56" rx="10" class="d-ok"/>
+          <text x="600" y="55" text-anchor="middle" class="d-text">backups/MyNode_a1b2c3d4/</text>
+          <text x="600" y="73" text-anchor="middle" class="d-small">2026-11-18_22-57-00</text>
+        </svg>
+      </figure>
+      <ol class="steps en">
+        <li>Fleet, select the node, press <kbd>b</kbd>. It's written at once from the node's last reading (a node not read yet is read first).</li>
+        <li>Several: <kbd>s</kbd>, <kbd>Space</kbd> on each (or <kbd>a</kbd>), then <kbd>b</kbd>.</li>
+        <li>The same reading twice is refused: <kbd>r</kbd> reads the node again first.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Flotte, sélectionnez le noeud, <kbd>b</kbd>. C'est écrit tout de suite à partir de la dernière lecture (un noeud pas encore lu est lu d'abord).</li>
+        <li>Plusieurs : <kbd>s</kbd>, <kbd>Espace</kbd> sur chacun (ou <kbd>a</kbd>), puis <kbd>b</kbd>.</li>
+        <li>Deux fois la même lecture, c'est refusé : <kbd>r</kbd> relit le noeud d'abord.</li>
+      </ol>
+      <p class="en"><b>In it:</b> companion: settings, radio, identity (private key), channels, contacts, auto-add, Bluetooth PIN. Repeater, room server, sensor: every setting, passwords, private key, regions, access list. Plus your custom names, roles and favourites.</p>
+      <p class="fr"><b>Dedans :</b> compagnon : réglages, radio, identité (clé privée), canaux, contacts, ajout auto, PIN Bluetooth. Répéteur, salon, capteur : chaque réglage, mots de passe, clé privée, régions, liste d'accès. Plus vos noms perso, rôles et favoris.</p>
+      <div class="note en">A backup holds the private key and channel keys. Keep your backups to yourself.</div>
+      <div class="note fr">Une sauvegarde contient la clé privée et les clés des canaux. Gardez vos sauvegardes pour vous.</div>
+    </div>
+
+    <div class="card" id="h-compare">
+      <h3><span class="icon">=</span><span class="en">See what changed</span><span class="fr">Voir ce qui a changé</span></h3>
+      <ul class="en">
+        <li><kbd>Enter</kbd> on a backup: compares it with the node as it is now, setting by setting. Nothing is written.</li>
+        <li><kbd>c</kbd> on the Backups page: compares two backups (the 2 checked, or the selected one with the one before).</li>
+        <li>Secrets are never shown, only "replaced".</li>
+      </ul>
+      <ul class="fr">
+        <li><kbd>Entrée</kbd> sur une sauvegarde : la compare au noeud tel qu'il est, réglage par réglage. Rien n'est écrit.</li>
+        <li><kbd>c</kbd> page Sauvegardes : compare deux sauvegardes (les 2 cochées, ou celle sélectionnée avec la précédente).</li>
+        <li>Les secrets ne sont jamais montrés, seulement « remplacés ».</li>
+      </ul>
+    </div>
+
+    <div class="card" id="h-restore">
+      <h3><span class="icon">R</span><span class="en">Restore a node</span><span class="fr">Restaurer un noeud</span></h3>
+      <ol class="steps en">
+        <li>A node's <b>Backups</b> section, select the backup, <kbd>R</kbd>.</li>
+        <li>Read every change by name ("auto-add repeaters: off → on"), then <b>restore</b>.</li>
+        <li>Only what differs is sent and checked. Stopped halfway (cable pulled)? Run it again: it sends the rest.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Section <b>Sauvegardes</b> d'un noeud, sélectionnez la sauvegarde, <kbd>R</kbd>.</li>
+        <li>Lisez chaque changement en clair (« ajout auto des répéteurs : non → oui »), puis <b>restaurer</b>.</li>
+        <li>Seul ce qui diffère est envoyé et vérifié. Arrêté en route (câble débranché) ? Relancez : le reste est envoyé.</li>
+      </ol>
+      <p class="en">Companion contacts: missing ones go back while there's room, ones added since are kept.</p>
+      <p class="fr">Contacts d'un compagnon : ceux qui manquent reviennent tant qu'il y a de la place, ceux ajoutés depuis sont gardés.</p>
+    </div>
+
+    <div class="card wide" id="h-other-board">
+      <h3><span class="icon">⇄</span><span class="en">Restore onto another board</span><span class="fr">Restaurer sur une autre carte</span></h3>
+      <figure>
+        <svg viewBox="0 0 720 210" role="img" aria-label="Restore onto another board">
+          <rect x="10" y="74" width="170" height="62" rx="10" class="d-box"/>
+          <text x="95" y="100" text-anchor="middle" class="d-text en">Backup of the old board</text>
+          <text x="95" y="100" text-anchor="middle" class="d-text fr">Sauvegarde de l'ancienne</text>
+          <text x="95" y="118" text-anchor="middle" class="d-small en">Backups page, plugged or not</text>
+          <text x="95" y="118" text-anchor="middle" class="d-small fr">page Sauvegardes, branchée ou non</text>
+          <path d="M180 105 H250" class="d-accline"/><path d="M242 99 l8 6 -8 6" class="d-accline"/>
+          <text x="215" y="96" text-anchor="middle" class="d-text">R</text>
+          <rect x="250" y="74" width="170" height="62" rx="10" class="d-acc"/>
+          <text x="335" y="100" text-anchor="middle" class="d-text en">Pick the new board</text>
+          <text x="335" y="100" text-anchor="middle" class="d-text fr">Choisir la nouvelle carte</text>
+          <text x="335" y="118" text-anchor="middle" class="d-small en">same kind of node</text>
+          <text x="335" y="118" text-anchor="middle" class="d-small fr">même type de noeud</text>
+          <path d="M420 95 C455 95 455 50 490 50 M420 115 C455 115 455 160 490 160" class="d-line"/>
+          <rect x="490" y="18" width="220" height="64" rx="10" class="d-warn"/>
+          <text x="600" y="42" text-anchor="middle" class="d-text en">Clone</text>
+          <text x="600" y="42" text-anchor="middle" class="d-text fr">Déplacer (un clone)</text>
+          <text x="600" y="60" text-anchor="middle" class="d-small en">becomes the old one: same key, name</text>
+          <text x="600" y="60" text-anchor="middle" class="d-small fr">devient l'ancienne : même clé, nom</text>
+          <text x="600" y="75" text-anchor="middle" class="d-small en">never power both at once</text>
+          <text x="600" y="75" text-anchor="middle" class="d-small fr">jamais les deux allumées</text>
+          <rect x="490" y="128" width="220" height="64" rx="10" class="d-ok"/>
+          <text x="600" y="152" text-anchor="middle" class="d-text en">Settings only</text>
+          <text x="600" y="152" text-anchor="middle" class="d-text fr">Copier</text>
+          <text x="600" y="170" text-anchor="middle" class="d-small en">radio, settings, channels, contacts</text>
+          <text x="600" y="170" text-anchor="middle" class="d-small fr">radio, réglages, canaux, contacts</text>
+          <text x="600" y="185" text-anchor="middle" class="d-small en">keeps its own identity</text>
+          <text x="600" y="185" text-anchor="middle" class="d-small fr">garde sa propre identité</text>
+        </svg>
+      </figure>
+      <p class="en">For a broken or replaced board. What the new board can't take (another radio chip, an older firmware) is left as it has it and listed at the end.</p>
+      <p class="fr">Pour une carte cassée ou remplacée. Ce que la nouvelle carte ne peut pas prendre (autre puce radio, firmware plus ancien) reste tel quel et est listé à la fin.</p>
+      <div class="note en">Clone: the app asks twice. Two boards with the same identity confuse the mesh: never power both at once.</div>
+      <div class="note fr">Clone : l'appli demande deux fois. Deux cartes avec la même identité perturbent le réseau : jamais les deux allumées.</div>
+    </div>
+
+    <div class="card wide" id="h-settings">
+      <h3><span class="icon">e</span><span class="en">Change settings</span><span class="fr">Changer des réglages</span></h3>
+      <figure>
+        <svg viewBox="0 0 760 230" role="img" aria-label="The commit question" class="term">
+          <rect width="760" height="230" rx="10" class="t-bg"/>
+          <rect x="130" y="22" width="508" height="190" rx="8" fill="#000" opacity=".5" transform="translate(6 6)"/>
+          <rect x="130" y="22" width="508" height="190" rx="8" class="t-pop"/>
+          <rect x="130" y="22" width="508" height="190" rx="8" class="t-line"/>
+          <rect x="146" y="15" width="90" height="14" class="t-pop"/>
+          <text x="150" y="26" class="t-cy en" font-weight="700">Commit</text>
+          <text x="150" y="26" class="t-cy fr" font-weight="700">Écriture</text>
+          <text x="150" y="54" class="t-fg en">Write 3 changes to MyNode?</text>
+          <text x="150" y="54" class="t-fg fr">Écrire 3 changements dans MyNode ?</text>
+          <g class="en"><text x="160" y="80" class="t-dim">name</text><text x="160" y="100" class="t-am">! radio</text><text x="160" y="120" class="t-dim">tx power</text></g>
+          <g class="fr"><text x="160" y="80" class="t-dim">nom</text><text x="160" y="100" class="t-am">! radio</text><text x="160" y="120" class="t-dim">puissance</text></g>
+          <text x="270" y="80" class="t-fg">MyNode <tspan class="t-dim">→</tspan> <tspan class="t-am">Base-1</tspan></text>
+          <text x="270" y="100" class="t-fg">915.800 <tspan class="t-dim">→</tspan> <tspan class="t-am">916.575 MHz</tspan></text>
+          <text x="270" y="120" class="t-fg">22 <tspan class="t-dim">→</tspan> <tspan class="t-am">20 dBm</tspan></text>
+          <text x="150" y="148" class="t-dim en">Each change is sent once. The node is read again afterwards.</text>
+          <text x="150" y="148" class="t-dim fr">Chaque changement est envoyé une fois. Le noeud est relu ensuite.</text>
+          <g class="en">
+            <rect x="150" y="170" width="160" height="26" rx="4" class="t-btn"/><text x="230" y="187" text-anchor="middle" fill="#0c0c0c" font-weight="700">back up, then write</text>
+            <rect x="322" y="170" width="120" height="26" rx="4" class="t-btn-off"/><text x="382" y="187" text-anchor="middle" class="t-fg">write it now</text>
+            <rect x="454" y="170" width="168" height="26" rx="4" class="t-btn-off"/><text x="538" y="187" text-anchor="middle" class="t-fg">keep configuring</text>
+          </g>
+          <g class="fr">
+            <rect x="150" y="170" width="168" height="26" rx="4" class="t-btn"/><text x="234" y="187" text-anchor="middle" fill="#0c0c0c" font-weight="700">sauver, puis écrire</text>
+            <rect x="330" y="170" width="110" height="26" rx="4" class="t-btn-off"/><text x="385" y="187" text-anchor="middle" class="t-fg">l'écrire</text>
+            <rect x="452" y="170" width="120" height="26" rx="4" class="t-btn-off"/><text x="512" y="187" text-anchor="middle" class="t-fg">continuer</text>
+          </g>
+        </svg>
+        <figcaption class="en">The commit question. <b>!</b> marks a change of how the node transmits: every node it talks with needs the same radio settings.</figcaption>
+        <figcaption class="fr">La question avant d'écrire. <b>!</b> marque un changement de la façon dont le noeud émet : tout noeud avec qui il parle doit avoir les mêmes réglages radio.</figcaption>
+      </figure>
+      <ol class="steps en">
+        <li>Open the node, go to the section, press <kbd>e</kbd>.</li>
+        <li>Change what you want (<kbd>?</kbd> explains a setting, <kbd>p</kbd> radio presets, <kbd>u</kbd> undo).</li>
+        <li><kbd>c</kbd>: check the list, then <b>back up, then write</b> (safest) or <b>write it now</b>.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Ouvrez le noeud, allez dans la section, <kbd>e</kbd>.</li>
+        <li>Changez ce que vous voulez (<kbd>?</kbd> explique un réglage, <kbd>p</kbd> préréglages radio, <kbd>u</kbd> annuler).</li>
+        <li><kbd>c</kbd> : vérifiez la liste, puis <b>sauver, puis écrire</b> (le plus sûr) ou <b>l'écrire</b>.</li>
+      </ol>
+    </div>
+
+    <div class="card" id="h-group">
+      <h3><span class="icon">⧉</span><span class="en">Several nodes at once</span><span class="fr">Plusieurs noeuds d'un coup</span></h3>
+      <ol class="steps en">
+        <li>Fleet: <kbd>s</kbd>, <kbd>Space</kbd> on each node (same kind), then <kbd>e</kbd>.</li>
+        <li>You get the settings they all have (not name, key or position). A setting that differs shows "n different values".</li>
+        <li><kbd>p</kbd> one radio preset for all, <kbd>a</kbd> one region for all.</li>
+        <li><kbd>c</kbd> lists the changes node by node, then writes each one.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Flotte : <kbd>s</kbd>, <kbd>Espace</kbd> sur chaque noeud (même type), puis <kbd>e</kbd>.</li>
+        <li>Vous avez les réglages qu'ils ont tous (sans nom, clé ni position). Un réglage qui diffère affiche « n valeurs différentes ».</li>
+        <li><kbd>p</kbd> un préréglage radio pour tous, <kbd>a</kbd> une région pour tous.</li>
+        <li><kbd>c</kbd> liste les changements noeud par noeud, puis écrit chacun.</li>
+      </ol>
+      <p class="en"><a href="#p-group">See the drawing</a></p>
+      <p class="fr"><a href="#p-group">Voir le dessin</a></p>
+    </div>
+
+    <div class="card" id="h-access">
+      <h3><span class="icon">🔑</span><span class="en">Give access to a repeater</span><span class="fr">Donner accès à un répéteur</span></h3>
+      <ol class="steps en">
+        <li>Contacts page: give your people a role with <kbd>r</kbd> (admin, read / write, read only).</li>
+        <li>Open the repeater, <b>Access</b>, <kbd>e</kbd>, <kbd>a</kbd>: pick people (<kbd>Space</kbd>, <kbd>+</kbd> a whole role, type to search).</li>
+        <li><kbd>c</kbd> to commit.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Page Contacts : donnez un rôle à vos gens avec <kbd>r</kbd> (admin, lecture / écriture, lecture seule).</li>
+        <li>Ouvrez le répéteur, <b>Accès</b>, <kbd>e</kbd>, <kbd>a</kbd> : choisissez des gens (<kbd>Espace</kbd>, <kbd>+</kbd> tout un rôle, tapez pour chercher).</li>
+        <li><kbd>c</kbd> pour écrire.</li>
+      </ol>
+      <p class="en">The role lives in your contacts, so you set it once and reuse it on every repeater. Each person goes in with the role you gave them; someone without one gets the role shown in the list, else read only. One repeater at a time: group edit doesn't do access lists.</p>
+      <p class="fr">Le rôle est gardé dans vos contacts : vous le donnez une fois et le réutilisez sur chaque répéteur. Chaque personne entre avec le rôle que vous lui avez donné ; sans rôle, elle prend celui affiché dans la liste, sinon lecture seule. Un répéteur à la fois : l'édition groupée ne fait pas les listes d'accès.</p>
+      <p class="docs en">Official docs: <a href="https://docs.meshcore.io/cli_commands/#acl">ACL commands</a> · <a href="https://docs.meshcore.io/faq/#33-q-what-is-the-password-to-administer-a-repeater-or-a-room-server">repeater and room server passwords</a></p>
+      <p class="docs fr">Doc officielle (en anglais) : <a href="https://docs.meshcore.io/cli_commands/#acl">commandes ACL</a> · <a href="https://docs.meshcore.io/faq/#33-q-what-is-the-password-to-administer-a-repeater-or-a-room-server">mots de passe des répéteurs et salons</a></p>
+    </div>
+
+    <div class="card" id="h-ble">
+      <h3><span class="icon">ᛒ</span><span class="en">Bluetooth pairing</span><span class="fr">Appairage Bluetooth</span></h3>
+      <p class="en">Usually nothing to do: a companion is read as soon as it's heard, with the PIN it last paired with, else the one in Settings (MeshCore default <code>123456</code>).</p>
+      <p class="fr">En général rien à faire : un compagnon est lu dès qu'il est entendu, avec le PIN de son dernier appairage, sinon celui des Réglages (défaut MeshCore <code>123456</code>).</p>
+      <ol class="steps en">
+        <li>PIN refused? Its line shows <kbd>p</kbd>: press it.</li>
+        <li>Type the 6-digit PIN (on its screen, or set in the MeshCore app). The app remembers it.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>PIN refusé ? Sa ligne montre <kbd>p</kbd> : appuyez.</li>
+        <li>Tapez le PIN à 6 chiffres (sur son écran, ou réglé dans l'appli MeshCore). L'appli le retient.</li>
+      </ol>
+      <p class="en"><kbd>u</kbd> unpairs it from this computer (the companion keeps its settings).</p>
+      <p class="fr"><kbd>u</kbd> le désappaire de cet ordinateur (le compagnon garde ses réglages).</p>
+    </div>
+
+    <div class="card wide" id="h-translate">
+      <h3><span class="icon">文</span><span class="en">Translate it into your language</span><span class="fr">Le traduire dans votre langue</span></h3>
+      <p class="en">No programming and no new program: two text files. <b>Settings</b> › <b>Language</b> shows where they are on your computer.</p>
+      <p class="fr">Ni programmation ni nouveau programme : deux fichiers texte. <b>Réglages</b> › <b>Langue</b> montre où ils sont sur votre ordinateur.</p>
+      <ol class="steps en">
+        <li>Run the program once. Next to it, <code>mcmanager-data/lang/en/</code> holds <code>mcmanager.ftl</code> (the screens) and <code>settings_help.toml</code> (the help on each setting).</li>
+        <li>Copy the <code>en</code> folder and name the copy with your language's code: <code>de</code>, <code>es</code>, <code>it</code>, <code>nl</code>, <code>pt-BR</code>…</li>
+        <li><code>mcmanager.ftl</code>: translate the text after each <code>=</code>. Start with <code>language-name</code>, your language's own name (<code>Deutsch</code>).</li>
+        <li><code>settings_help.toml</code>: translate the <code>title</code>, <code>summary</code>, <code>notes</code>, <code>warning</code> and <code>means</code> texts.</li>
+        <li>Leave as they are: the names before <code>=</code>, the <code>{ $something }</code> parts, the other fields.</li>
+        <li><b>Settings</b> › <b>Language</b>: yours is in the list. What isn't translated yet shows in English, so go bit by bit.</li>
+      </ol>
+      <ol class="steps fr">
+        <li>Lancez le programme une fois. À côté de lui, <code>mcmanager-data/lang/en/</code> contient <code>mcmanager.ftl</code> (les écrans) et <code>settings_help.toml</code> (l'aide de chaque réglage).</li>
+        <li>Copiez le dossier <code>en</code> et nommez la copie avec le code de votre langue : <code>de</code>, <code>es</code>, <code>it</code>, <code>nl</code>, <code>pt-BR</code>…</li>
+        <li><code>mcmanager.ftl</code> : traduisez le texte après chaque <code>=</code>. Commencez par <code>language-name</code>, le nom de votre langue dans votre langue (<code>Deutsch</code>).</li>
+        <li><code>settings_help.toml</code> : traduisez les textes <code>title</code>, <code>summary</code>, <code>notes</code>, <code>warning</code> et <code>means</code>.</li>
+        <li>Laissez tels quels : les noms avant <code>=</code>, les parties <code>{ $quelquechose }</code>, les autres champs.</li>
+        <li><b>Réglages</b> › <b>Langue</b> : la vôtre est dans la liste. Ce qui n'est pas encore traduit s'affiche en anglais, avancez petit à petit.</li>
+      </ol>
+      <pre><code><span class="en"># mcmanager.ftl: only the text after = changes</span><span class="fr"># mcmanager.ftl : seul le texte après = change</span>
+language-name = Deutsch
+tab-fleet = Flotte
+group-mixed = { $count } verschiedene Werte</code></pre>
+      <p class="en">Tools: any editor that saves UTF-8, like Notepad, <a href="https://notepad-plus-plus.org">Notepad++</a> or <a href="https://code.visualstudio.com">VS Code</a> (its "Fluent" extension colours <code>.ftl</code> files). DeepL or an AI can make a first draft: check the names and <code>{ $something }</code> parts came back untouched.</p>
+      <p class="fr">Outils : n'importe quel éditeur qui enregistre en UTF-8, comme le Bloc-notes, <a href="https://notepad-plus-plus.org">Notepad++</a> ou <a href="https://code.visualstudio.com">VS Code</a> (son extension « Fluent » colore les fichiers <code>.ftl</code>). DeepL ou une IA peut faire un premier jet : vérifiez que les noms et les parties <code>{ $quelquechose }</code> sont revenus intacts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ KEYS -->
+<section class="tab" id="keys">
+  <h2><span class="en">Keys</span><span class="fr">Touches</span></h2>
+  <p class="lead en">The bar at the bottom of the app always shows the keys that work where you are.</p>
+  <p class="lead fr">La barre en bas de l'appli montre toujours les touches qui marchent là où vous êtes.</p>
+  <div class="card"><div class="table-wrap">
+    <table class="en">
+      <tr><th>Key</th><th>Does</th></tr>
+      <tr><td><kbd>Tab</kbd> <kbd>Shift+Tab</kbd> <kbd>1</kbd>–<kbd>8</kbd></td><td>change page (in a node: its sections)</td></tr>
+      <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>PgUp</kbd> <kbd>PgDn</kbd> <kbd>Home</kbd> <kbd>End</kbd></td><td>move</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>open / change / compare</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>back one step</td></tr>
+      <tr><td><kbd>r</kbd> / <kbd>R</kbd></td><td>read again / all (Fleet)</td></tr>
+      <tr><td><kbd>o</kbd> / <kbd>f</kbd> / <kbd>/</kbd></td><td>sort / show one kind / search</td></tr>
+      <tr><td><kbd>s</kbd></td><td>Fleet: select mode · in a node: show / hide secrets</td></tr>
+      <tr><td><kbd>Space</kbd> / <kbd>a</kbd></td><td>check one / all or none</td></tr>
+      <tr><td><kbd>b</kbd></td><td>back up</td></tr>
+      <tr><td><kbd>e</kbd> / <kbd>c</kbd></td><td>edit / commit</td></tr>
+      <tr><td><kbd>u</kbd> / <kbd>U</kbd></td><td>undo / redo</td></tr>
+      <tr><td><kbd>?</kbd> / <kbd>p</kbd></td><td>help on a setting / radio presets (edit mode)</td></tr>
+      <tr><td><kbd>p</kbd> / <kbd>u</kbd></td><td>pair / unpair a Bluetooth companion (Fleet, Overview)</td></tr>
+      <tr><td><kbd>n</kbd> / <kbd>*</kbd> / <kbd>r</kbd></td><td>custom name / favourite / role (Contacts)</td></tr>
+      <tr><td><kbd>R</kbd></td><td>restore (Backups)</td></tr>
+      <tr><td><kbd>x</kbd></td><td>remove or delete (red, always asks)</td></tr>
+      <tr><td><kbd>q</kbd></td><td>quit (asks while something runs)</td></tr>
+    </table>
+    <table class="fr">
+      <tr><th>Touche</th><th>Fait</th></tr>
+      <tr><td><kbd>Tab</kbd> <kbd>Maj+Tab</kbd> <kbd>1</kbd>–<kbd>8</kbd></td><td>changer de page (dans un noeud : ses sections)</td></tr>
+      <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>PgUp</kbd> <kbd>PgDn</kbd> <kbd>Home</kbd> <kbd>End</kbd></td><td>se déplacer</td></tr>
+      <tr><td><kbd>Entrée</kbd></td><td>ouvrir / changer / comparer</td></tr>
+      <tr><td><kbd>Échap</kbd></td><td>revenir d'un pas</td></tr>
+      <tr><td><kbd>r</kbd> / <kbd>R</kbd></td><td>relire / tous (Flotte)</td></tr>
+      <tr><td><kbd>o</kbd> / <kbd>f</kbd> / <kbd>/</kbd></td><td>trier / montrer un type / chercher</td></tr>
+      <tr><td><kbd>s</kbd></td><td>Flotte : mode sélection · dans un noeud : montrer / cacher les secrets</td></tr>
+      <tr><td><kbd>Espace</kbd> / <kbd>a</kbd></td><td>cocher un / tous ou aucun</td></tr>
+      <tr><td><kbd>b</kbd></td><td>sauvegarder</td></tr>
+      <tr><td><kbd>e</kbd> / <kbd>c</kbd></td><td>éditer / écrire</td></tr>
+      <tr><td><kbd>u</kbd> / <kbd>U</kbd></td><td>annuler / refaire</td></tr>
+      <tr><td><kbd>?</kbd> / <kbd>p</kbd></td><td>aide sur un réglage / préréglages radio (édition)</td></tr>
+      <tr><td><kbd>p</kbd> / <kbd>u</kbd></td><td>appairer / désappairer un compagnon Bluetooth (Flotte, Résumé)</td></tr>
+      <tr><td><kbd>n</kbd> / <kbd>*</kbd> / <kbd>r</kbd></td><td>nom perso / favori / rôle (Contacts)</td></tr>
+      <tr><td><kbd>R</kbd></td><td>restaurer (Sauvegardes)</td></tr>
+      <tr><td><kbd>x</kbd></td><td>retirer ou supprimer (en rouge, demande toujours)</td></tr>
+      <tr><td><kbd>q</kbd></td><td>quitter (demande si quelque chose tourne)</td></tr>
+    </table>
+  </div></div>
+</section>
+
+<!-- ============================================================ FILES -->
+<section class="tab" id="files">
+  <h2><span class="en">Files &amp; settings</span><span class="fr">Fichiers et réglages</span></h2>
+  <p class="lead en">Everything is in <code>mcmanager-data</code>, next to the program (or <code>--data &lt;folder&gt;</code>, or the <code>MCMANAGER_DATA</code> variable). Nothing is written anywhere else.</p>
+  <p class="lead fr">Tout est dans <code>mcmanager-data</code>, à côté du programme (ou <code>--data &lt;dossier&gt;</code>, ou la variable <code>MCMANAGER_DATA</code>). Rien n'est écrit ailleurs.</p>
+  <div class="grid">
+    <div class="card wide"><div class="table-wrap">
+      <table class="en">
+        <tr><th>File</th><th>What</th></tr>
+        <tr><td><code>config.toml</code></td><td>The settings, each explained in the file. The previous one is kept as <code>.bak</code>.</td></tr>
+        <tr><td><code>backups/&lt;name&gt;_&lt;key&gt;/&lt;date_time&gt;/</code></td><td>The backups (or the folder you chose). One folder per board: a renamed node keeps its backups together.</td></tr>
+        <tr><td><code>contacts.toml</code></td><td>The address book. The previous one is kept as <code>.bak</code>.</td></tr>
+        <tr><td><code>bluetooth.toml</code></td><td>The PIN each companion last paired with. Anyone with this file can pair with your companions.</td></tr>
+        <tr><td><code>regions.txt</code></td><td>Your region names.</td></tr>
+        <tr><td><code>lang/</code></td><td>The language files: fix a text there, or add a language.</td></tr>
+        <tr><td><code>logs/</code></td><td>The debug log, only when on.</td></tr>
+        <tr><td><code>devices.toml</code>, <code>radio_presets.toml</code></td><td>Optional: your own boards, your own radio presets.</td></tr>
+      </table>
+      <table class="fr">
+        <tr><th>Fichier</th><th>Quoi</th></tr>
+        <tr><td><code>config.toml</code></td><td>Les réglages, chacun expliqué dans le fichier. Le précédent est gardé en <code>.bak</code>.</td></tr>
+        <tr><td><code>backups/&lt;nom&gt;_&lt;clé&gt;/&lt;date_heure&gt;/</code></td><td>Les sauvegardes (ou le dossier choisi). Un dossier par carte : un noeud renommé garde ses sauvegardes ensemble.</td></tr>
+        <tr><td><code>contacts.toml</code></td><td>Le carnet d'adresses. Le précédent est gardé en <code>.bak</code>.</td></tr>
+        <tr><td><code>bluetooth.toml</code></td><td>Le PIN du dernier appairage de chaque compagnon. Avec ce fichier, n'importe qui peut s'appairer à vos compagnons.</td></tr>
+        <tr><td><code>regions.txt</code></td><td>Vos noms de régions.</td></tr>
+        <tr><td><code>lang/</code></td><td>Les fichiers de langue : corrigez un texte là, ou ajoutez une langue.</td></tr>
+        <tr><td><code>logs/</code></td><td>Le journal de débogage, seulement s'il est activé.</td></tr>
+        <tr><td><code>devices.toml</code>, <code>radio_presets.toml</code></td><td>Optionnels : vos propres cartes, vos propres préréglages radio.</td></tr>
+      </table>
+    </div></div>
+    <div class="card wide">
+      <h3>config.toml</h3>
+      <div class="table-wrap"><table class="en">
+        <tr><th>Setting</th><th>Default</th><th>What</th></tr>
+        <tr><td><code>[ui] language</code></td><td><code>"auto"</code></td><td><code>auto</code>, or a language code (<code>en</code>, <code>fr</code>…)</td></tr>
+        <tr><td><code>[scan] every_secs</code></td><td><code>2</code></td><td>how often the USB ports are looked at</td></tr>
+        <tr><td><code>[scan] answer_ms</code></td><td><code>4000</code></td><td>time a node gets to answer when plugged in (an ESP32 restarts when its port opens)</td></tr>
+        <tr><td><code>[backup] private_key</code></td><td><code>true</code></td><td>keep the private key in backups (needed to restore the same identity)</td></tr>
+        <tr><td><code>[backup] hardware_id</code></td><td><code>true</code></td><td>keep the board's USB serial number, to recognise "the same board"</td></tr>
+        <tr><td><code>[backup] folder</code></td><td><code>""</code></td><td>where backups go; empty = <code>backups</code> in the data folder</td></tr>
+        <tr><td><code>[bluetooth] enabled</code></td><td><code>true</code></td><td>look for Bluetooth companions</td></tr>
+        <tr><td><code>[bluetooth] pin</code></td><td><code>"123456"</code></td><td>the pairing PIN tried first</td></tr>
+        <tr><td><code>[debug] log</code></td><td><code>false</code></td><td>the debug log</td></tr>
+      </table>
+      <table class="fr">
+        <tr><th>Réglage</th><th>Défaut</th><th>Quoi</th></tr>
+        <tr><td><code>[ui] language</code></td><td><code>"auto"</code></td><td><code>auto</code>, ou un code de langue (<code>en</code>, <code>fr</code>…)</td></tr>
+        <tr><td><code>[scan] every_secs</code></td><td><code>2</code></td><td>tous les combien les ports USB sont regardés</td></tr>
+        <tr><td><code>[scan] answer_ms</code></td><td><code>4000</code></td><td>le temps qu'a un noeud pour répondre quand il est branché (un ESP32 redémarre quand son port s'ouvre)</td></tr>
+        <tr><td><code>[backup] private_key</code></td><td><code>true</code></td><td>garder la clé privée dans les sauvegardes (nécessaire pour restaurer la même identité)</td></tr>
+        <tr><td><code>[backup] hardware_id</code></td><td><code>true</code></td><td>garder le numéro de série USB de la carte, pour reconnaître « la même carte »</td></tr>
+        <tr><td><code>[backup] folder</code></td><td><code>""</code></td><td>où vont les sauvegardes ; vide = <code>backups</code> dans le dossier de données</td></tr>
+        <tr><td><code>[bluetooth] enabled</code></td><td><code>true</code></td><td>chercher les compagnons Bluetooth</td></tr>
+        <tr><td><code>[bluetooth] pin</code></td><td><code>"123456"</code></td><td>le PIN d'appairage essayé d'abord</td></tr>
+        <tr><td><code>[debug] log</code></td><td><code>false</code></td><td>le journal de débogage</td></tr>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3><span class="en">Languages</span><span class="fr">Langues</span></h3>
+      <ul class="en">
+        <li>English and French built in. "Automatic" follows your system.</li>
+        <li><b>Fix a text:</b> edit it in <code>lang/</code>. Your file is never overwritten.</li>
+        <li><b>New language:</b> copy <code>lang/en/</code> to <code>lang/&lt;code&gt;/</code>, translate, pick it in Settings.</li>
+      </ul>
+      <ul class="fr">
+        <li>Anglais et français intégrés. « Automatique » suit votre système.</li>
+        <li><b>Corriger un texte :</b> modifiez-le dans <code>lang/</code>. Votre fichier n'est jamais écrasé.</li>
+        <li><b>Nouvelle langue :</b> copiez <code>lang/en/</code> vers <code>lang/&lt;code&gt;/</code>, traduisez, choisissez-la dans Réglages.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="en">Your backups are safe</span><span class="fr">Vos sauvegardes sont en sécurité</span></h3>
+      <ul class="en">
+        <li>The app never deletes a backup on its own: only you do, on the Backups page.</li>
+        <li>A backups folder that's gone (deleted, drive unplugged) is said at once; the default folder is used meanwhile.</li>
+      </ul>
+      <ul class="fr">
+        <li>L'appli ne supprime jamais une sauvegarde d'elle-même : vous seul le faites, page Sauvegardes.</li>
+        <li>Un dossier de sauvegardes disparu (supprimé, disque débranché) est signalé tout de suite ; le dossier par défaut sert en attendant.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PROBLEMS -->
+<section class="tab" id="problems">
+  <h2><span class="en">Problems</span><span class="fr">Problèmes</span></h2>
+  <div class="card"><div class="table-wrap">
+    <table class="en">
+      <tr><th>What you see</th><th>What to do</th></tr>
+      <tr><td>A companion on USB "doesn't answer"</td><td>It runs a Bluetooth or Wi-Fi firmware: flash the USB companion firmware, or use it over Bluetooth.</td></tr>
+      <tr><td>A board plugged in is missed</td><td>Raise <code>answer_ms</code> in config.toml.</td></tr>
+      <tr><td>Linux: a port can't be opened</td><td>Add your user to <code>dialout</code> (Arch: <code>uucp</code>), then log out and back in.</td></tr>
+      <tr><td>A Bluetooth companion isn't listed</td><td>It's connected to a phone (disconnect it there), off, or out of range.</td></tr>
+      <tr><td>"Bluetooth: not available"</td><td>No Bluetooth adapter, or it's off. Linux: start <code>bluetoothd</code>.</td></tr>
+      <tr><td>The PIN is refused</td><td><kbd>p</kbd> on its line, type the PIN shown on its screen or set in the MeshCore app.</td></tr>
+      <tr><td>A restore stopped</td><td>Run it again: it sends what's left.</td></tr>
+      <tr><td>Odd characters or boxes</td><td>Use Windows Terminal (Windows) or a UTF-8 terminal.</td></tr>
+    </table>
+    <table class="fr">
+      <tr><th>Ce que vous voyez</th><th>Que faire</th></tr>
+      <tr><td>Un compagnon en USB « ne répond pas »</td><td>Il a un firmware Bluetooth ou Wi-Fi : flashez le firmware compagnon USB, ou utilisez-le en Bluetooth.</td></tr>
+      <tr><td>Une carte branchée est ratée</td><td>Augmentez <code>answer_ms</code> dans config.toml.</td></tr>
+      <tr><td>Linux : un port ne s'ouvre pas</td><td>Ajoutez votre utilisateur à <code>dialout</code> (Arch : <code>uucp</code>), puis déconnectez-vous et reconnectez-vous.</td></tr>
+      <tr><td>Un compagnon Bluetooth n'est pas listé</td><td>Il est connecté à un téléphone (déconnectez-le), éteint, ou trop loin.</td></tr>
+      <tr><td>« Bluetooth : pas disponible »</td><td>Pas d'adaptateur, ou il est coupé. Linux : démarrez <code>bluetoothd</code>.</td></tr>
+      <tr><td>Le PIN est refusé</td><td><kbd>p</kbd> sur sa ligne, tapez le PIN affiché sur son écran ou réglé dans l'appli MeshCore.</td></tr>
+      <tr><td>Une restauration s'est arrêtée</td><td>Relancez-la : elle envoie le reste.</td></tr>
+      <tr><td>Caractères bizarres ou carrés</td><td>Utilisez Windows Terminal (Windows) ou un terminal UTF-8.</td></tr>
+    </table>
+  </div></div>
+</section>
+
+</main>
+
+<footer><div>
+  <span class="en">Fed1291 · <a href="https://github.com/Fed1291/meshcore-manager/blob/main/LICENSE">CC BY-NC-SA 4.0</a> · <a href="https://github.com/Fed1291/meshcore-manager">Source and downloads</a> · <a href="https://docs.meshcore.io">MeshCore docs</a> · Written with the help of Claude (Anthropic's AI). The drawings use made-up nodes.</span>
+  <span class="fr">Fed1291 · <a href="https://github.com/Fed1291/meshcore-manager/blob/main/LICENSE">CC BY-NC-SA 4.0</a> · <a href="https://github.com/Fed1291/meshcore-manager">Sources et téléchargements</a> · <a href="https://docs.meshcore.io">Doc MeshCore</a> · Écrit avec l'aide de Claude (l'IA d'Anthropic). Les dessins utilisent des noeuds inventés.</span>
+</div></footer>
+
+<script>
+(function () {
+  var root = document.documentElement, body = document.body;
+  root.classList.add("js");
+  var tabs = ["start", "pages", "howto", "keys", "files", "problems"];
+
+  function stored(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function store(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+
+  function setLang(lang) {
+    body.setAttribute("data-lang", lang);
+    root.setAttribute("lang", lang);
+    document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-set-lang") === lang ? "true" : "false");
+    });
+    store("mcm-help-lang", lang);
+  }
+
+  // the tab holding an anchor: a tab id itself, or the section an element sits in
+  function show(hash) {
+    var id = (hash || "").replace("#", "");
+    var target = id ? document.getElementById(id) : null;
+    var tab = tabs.indexOf(id) >= 0 ? id : null;
+    if (!tab && target) {
+      var section = target.closest(".tab");
+      if (section) tab = section.id;
+    }
+    if (!tab) tab = "start";
+    document.querySelectorAll(".tab").forEach(function (s) { s.classList.toggle("active", s.id === tab); });
+    document.querySelectorAll("nav a").forEach(function (a) {
+      a.setAttribute("aria-selected", a.getAttribute("data-tab") === tab ? "true" : "false");
+    });
+    if (target && target.id !== tab) target.scrollIntoView();
+    else window.scrollTo(0, 0);
+  }
+
+  // the header's real height (it wraps on a narrow screen): what sticks under it starts there
+  var head = document.querySelector("header");
+  function measure() { root.style.setProperty("--head", head.offsetHeight + "px"); }
+  window.addEventListener("resize", measure);
+  measure();
+
+  var lang = stored("mcm-help-lang");
+  if (lang !== "en" && lang !== "fr") {
+    lang = (navigator.language || "en").toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+  }
+  setLang(lang);
+  document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.getAttribute("data-set-lang")); });
+  });
+  // links inside the page switch the tab themselves (also where the address can't change,
+  // e.g. a file opened from the zip or a preview)
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    e.preventDefault();
+    var hash = a.getAttribute("href");
+    show(hash);
+    try { history.replaceState(null, "", hash); } catch (err) {}
+  });
+  window.addEventListener("hashchange", function () { show(location.hash); });
+  show(location.hash);
+})();
+</script>
+</body>
+</html>

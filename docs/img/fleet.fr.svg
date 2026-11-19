@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 352" width="860" height="352" role="img" aria-label="Meshcore Manager : la page Flotte (noeuds inventés)">
+  <style>
+    text { font: 12px ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace; white-space: pre; }
+    .bg { fill: #0c0c0c; } .fg { fill: #cccccc; } .wh { fill: #f2f2f2; } .dim { fill: #8a8a8a; } .ac { fill: #3a96dd; }
+    .am { fill: #c19c00; } .gr { fill: #16c60c; } .bl { fill: #3b78ff; } .mg { fill: #b4009e; }
+    .sel { fill: #1f4f7a; } .line { stroke: #3a96dd; stroke-width: 1.5; fill: none; } .grey { stroke: #5a5a5a; stroke-width: 1.2; fill: none; }
+    .b { font-weight: 700; } .k { font-size: 11px; }
+  </style>
+  <rect width="860" height="352" rx="8" class="bg"/>
+  <g transform="translate(14 10)" fill="#3a96dd"><path d="M0 0h8l6 9 6-9h8v32h-8V14l-6 8-6-8v18H0z"/><path d="M34 0h22v8H42v16h14v8H34z"/></g>
+  <text x="80" y="24" class="ac b">Meshcore Manager</text>
+  <text x="80" y="41" class="dim">(by Fed1291)</text>
+  <rect x="224" y="12" width="66" height="16" fill="#3a96dd"/>
+  <text x="228" y="24" fill="#0c0c0c" class="b">1 Flotte</text>
+  <text x="298" y="24" class="dim">2 Sauvegardes</text><text x="402" y="24" class="dim">3 Contacts</text><text x="486" y="24" class="dim">4 Régions</text>
+  <text x="560" y="24" class="dim">5 Appareils</text><text x="646" y="24" class="dim">6 Logs</text><text x="700" y="24" class="dim">7 Réglages</text><text x="780" y="24" class="dim">8 Info</text>
+  <rect x="10" y="58" width="840" height="150" rx="3" class="line"/>
+  <rect x="20" y="51" width="300" height="14" class="bg"/>
+  <text x="24" y="62" class="ac b">6 noeuds  ·  Bluetooth : à l'écoute ·))</text>
+  <text x="24" y="80" class="dim">lien</text><text x="118" y="80" class="dim">clé</text><text x="160" y="80" class="dim">type</text><text x="252" y="80" class="dim">nom</text><text x="370" y="80" class="dim">appareil</text><text x="596" y="80" class="dim">firmware</text><text x="704" y="80" class="dim">dern. sauveg.</text>
+  <rect x="18" y="86" width="824" height="17" class="sel"/>
+  <text x="24" y="99" class="fg"><tspan class="ac">USB</tspan> COM3</text><text x="118" y="99" class="wh b">A1B2</text><text x="160" y="99" class="bl">compagnon</text><text x="252" y="99" class="wh">MyNode</text><text x="370" y="99" class="fg">Heltec WiFi LoRa 32 V3</text><text x="596" y="99" class="fg">v1.12.0</text><text x="704" y="99" class="fg">2026-11-18 22:57</text>
+  <text x="24" y="118" class="fg"><tspan class="ac">USB</tspan> COM4</text><text x="118" y="118" class="wh b">7F3C</text><text x="160" y="118" class="bl">compagnon</text><text x="252" y="118" class="fg">Pocket</text><text x="370" y="118" class="fg">RAK WisBlock 4631</text><text x="596" y="118" class="fg">v1.12.0</text><text x="704" y="118" class="fg">2026-11-12 09:10</text>
+  <text x="24" y="137" class="fg"><tspan class="ac">BLE</tspan> -61</text><text x="118" y="137" class="wh b">C0DE</text><text x="160" y="137" class="bl">compagnon</text><text x="252" y="137" class="fg">Mobile-BT</text><text x="370" y="137" class="fg">Seeed SenseCAP T1000-E</text><text x="596" y="137" class="fg">v1.12.0</text><text x="704" y="137" class="dim">-</text>
+  <text x="24" y="156" class="fg"><tspan class="ac">USB</tspan> COM5</text><text x="118" y="156" class="wh b">5E21</text><text x="160" y="156" class="gr">répéteur</text><text x="252" y="156" class="fg">Hilltop-RPT</text><text x="370" y="156" class="fg">Heltec Mesh Node T114</text><text x="596" y="156" class="fg">v1.12.0</text><text x="704" y="156" class="fg">2026-11-18 09:40</text>
+  <text x="24" y="175" class="fg"><tspan class="ac">USB</tspan> COM7</text><text x="118" y="175" class="wh b">9A40</text><text x="160" y="175" class="mg">salon</text><text x="252" y="175" class="fg">Room-1</text><text x="370" y="175" class="fg">Seeed XIAO nRF52840</text><text x="596" y="175" class="fg">v1.12.0</text><text x="704" y="175" class="fg">2026-11-10 08:30</text>
+  <text x="24" y="194" class="fg"><tspan class="ac">USB</tspan> COM8</text><text x="118" y="194" class="wh b">3B77</text><text x="160" y="194" class="am">capteur</text><text x="252" y="194" class="fg">Sensor-1</text><text x="370" y="194" class="fg">RAK WisBlock 4631</text><text x="596" y="194" class="fg">v1.12.0</text><text x="704" y="194" class="dim">-</text>
+  <rect x="10" y="222" width="840" height="96" rx="3" class="grey"/>
+  <rect x="20" y="215" width="120" height="14" class="bg"/>
+  <text x="24" y="226" class="ac b">Noeud choisi</text>
+  <text x="24" y="246" class="dim">port</text><text x="24" y="263" class="dim">USB</text><text x="24" y="280" class="dim">appareil</text><text x="24" y="297" class="dim">radio</text>
+  <text x="130" y="246" class="fg">COM3</text><text x="130" y="263" class="fg">303a:1001  ESP32-S3  (Heltec V3, T-Beam Supreme, Station G2...)</text><text x="130" y="280" class="fg">Heltec WiFi LoRa 32 V3 (Heltec)</text><text x="130" y="297" class="fg">915.8,250,10,5   (Australia)</text>
+  <text x="24" y="312" class="dim">Entrée : ouvrir le noeud (contacts, canaux, sauvegardes...)</text>
+  <text x="14" y="338" class="k"><tspan class="ac b">↑↓</tspan><tspan class="dim"> choisir   </tspan><tspan class="ac b">Entrée</tspan><tspan class="dim"> ouvrir   </tspan><tspan class="ac b">b</tspan><tspan class="dim"> sauver   </tspan><tspan class="ac b">s</tspan><tspan class="dim"> sélection   </tspan><tspan class="ac b">r</tspan><tspan class="dim"> le rescanner   </tspan><tspan class="ac b">R</tspan><tspan class="dim"> tout rescanner   </tspan><tspan class="ac b">f</tspan><tspan class="dim"> afficher : tous   </tspan><tspan class="ac b">q</tspan><tspan class="dim"> sortir</tspan></text>
+</svg>

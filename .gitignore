@@ -1,0 +1,7 @@
+# build output
+/target
+/dist
+# what the program writes when run from here: settings, backups (they hold private keys)
+*-data/
+# marker of the export script (private)
+/.meshcore-export

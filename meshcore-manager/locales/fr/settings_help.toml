@@ -1,0 +1,599 @@
+# Traduction française : seuls title, summary, notes, warning, default et means sont traduits ;
+# le reste (les règles) doit rester tel quel (fichier anglais) : le programme ne lit que ces mots.
+#
+# Meshcore Manager - les réglages qu'un noeud permet de changer : ce que fait chacun, ce qu'il accepte.
+# Affiché en mode édition (le cadre « Réglage choisi » et la fenêtre ?). Les règles décident de ce
+# qu'on peut taper : une touche qui ne peut faire partie d'une valeur valide est refusée, et une
+# valeur est vérifiée avant d'être prise.
+#
+# Rédigé d'après le firmware MeshCore, qui fait référence quand les deux diffèrent :
+#   docs/cli_commands.md, src/helpers/CommonCLI.cpp, src/helpers/CommonRadioPrefs.cpp,
+#   examples/companion_radio/MyMesh.cpp
+# MeshCore : licence MIT, Copyright (c) 2025 Scott Powell / rippleradios.com
+#
+# Une copie plus récente ou corrigée peut aller dans le dossier de données sous le nom
+# settings_help.toml : ses entrées (par id et node) remplacent celles-ci. Une traduction :
+# locales/<code>/settings_help.toml (mêmes ids).
+#
+# Champs
+#   id        le réglage : le nom propre d'un répéteur / salon / capteur ("loop.detect") ; les ids
+#             d'un compagnon sont ceux de src/node/edit.rs ("name", "freq", "manual.add"...)
+#   node      "companion" ou "console" (répéteur, salon, capteur) ; absent = les deux
+#   title     une ligne
+#   summary   ce qu'il fait, un paragraphe
+#   notes     d'autres paragraphes
+#   warning   affiché en jaune
+#   default   la valeur par défaut du firmware
+#   since     la version du firmware qui l'a ajouté
+#   type      ce qu'il accepte :
+#               number   un nombre, min..max (décimales permises)
+#               integer  un nombre entier, min..max
+#               choice   une des `values` (choisie avec les flèches)
+#               text     du texte : au plus max_bytes octets, aucun des caractères `forbidden`,
+#                        vide permis si empty_ok
+#               radio    "freq,bw,sf,cr" (la radio d'un répéteur)
+#               key      chiffres hexa, exactement max_bytes octets (deux chiffres chacun)
+#   min, max  la plage (number, integer) ; zero_off = 0 est aussi accepté ("off")
+#   unit      affichée après la plage ("MHz", "%")
+#   values    { value = ce qui est envoyé, shows = ce que le noeud répond quand c'est différent,
+#               means = ce que ça fait }
+
+# ---------------------------------------------------------------------------------------------
+# Compagnon (firmware compagnon USB)
+# ---------------------------------------------------------------------------------------------
+
+[[setting]]
+id = "name"
+node = "companion"
+title = "Nom du noeud"
+summary = "Le nom que ce compagnon annonce sur le mesh et qui apparaît dans les contacts des autres."
+notes = ["Emoji et lettres accentuées prennent plus d'un octet chacun."]
+type = "text"
+max_bytes = 31
+
+[[setting]]
+id = "lat"
+title = "Latitude"
+summary = "La latitude annoncée par le noeud, en degrés décimaux (nord positif). 0 avec une longitude de 0 = pas de position."
+default = "0"
+type = "number"
+min = -90
+max = 90
+unit = "°"
+
+[[setting]]
+id = "lon"
+title = "Longitude"
+summary = "La longitude annoncée par le noeud, en degrés décimaux (est positif). 0 avec une latitude de 0 = pas de position."
+default = "0"
+type = "number"
+min = -180
+max = 180
+unit = "°"
+
+[[setting]]
+id = "freq"
+node = "companion"
+title = "Fréquence radio"
+summary = "La fréquence LoRa, en MHz. Tous les noeuds avec qui il parle doivent avoir mêmes fréquence, bande passante, SF et CR."
+warning = "La changer coupe le noeud d'un mesh qui garde les anciens réglages. Utilisez une fréquence permise chez vous."
+default = "869.618 (préréglage EU / UK étroit)"
+type = "number"
+min = 150
+max = 2500
+unit = "MHz"
+
+[[setting]]
+id = "bw"
+node = "companion"
+title = "Bande passante"
+summary = "La bande passante LoRa, en kHz. Plus étroite porte plus loin, plus lentement. Doit être celle du mesh."
+warning = "La changer coupe le noeud d'un mesh qui garde les anciens réglages."
+default = "62.5"
+type = "number"
+min = 7
+max = 500
+unit = "kHz"
+
+[[setting]]
+id = "sf"
+node = "companion"
+title = "Facteur d'étalement"
+summary = "Combien chaque bit est étalé dans le temps. Plus haut porte plus loin et résiste au bruit, mais chaque paquet dure plus longtemps. Doit être celui du mesh."
+warning = "Le changer coupe le noeud d'un mesh qui garde les anciens réglages."
+default = "8"
+type = "integer"
+min = 5
+max = 12
+
+[[setting]]
+id = "cr"
+node = "companion"
+title = "Taux de codage"
+summary = "Bits de correction d'erreur ajoutés aux données (4/5 à 4/8). Plus haut résiste mieux aux brouillages, au prix du temps d'antenne. Doit être celui du mesh."
+warning = "Le changer coupe le noeud d'un mesh qui garde les anciens réglages."
+default = "5"
+type = "integer"
+min = 5
+max = 8
+
+[[setting]]
+id = "tx"
+node = "companion"
+title = "Puissance émise"
+summary = "La puissance de la puce LoRa, en dBm. Le noeud refuse plus que son appareil ne permet (puissance max affichée)."
+notes = ["Certains appareils ont un ampli après la puce : la puissance émise est alors plus haute que cette valeur. Voir le manuel de l'appareil."]
+warning = "Trop de puissance peut être illégal chez vous."
+type = "integer"
+min = -9
+max = 30
+unit = "dBm"
+
+[[setting]]
+id = "manual.add"
+node = "companion"
+title = "Ajouter tout noeud entendu"
+summary = "Ce que fait le compagnon d'un noeud entendu pour la première fois (son annonce)."
+type = "choice"
+values = [
+  { value = "on", means = "tout noeud entendu entre dans les contacts de lui-même" },
+  { value = "off", means = "seuls les types activés sous « ajout auto » entrent d'eux-mêmes ; les autres sont seulement listés, l'app ajoute ceux voulus" },
+]
+
+[[setting]]
+id = "advert.loc"
+node = "companion"
+title = "Position dans annonces"
+summary = "Si les annonces (adverts) du noeud portent sa position, pour que d'autres l'affichent sur une carte."
+type = "choice"
+values = [
+  { value = "off", means = "les adverts ne portent pas de position" },
+  { value = "on", means = "les adverts portent la latitude et longitude réglées ici" },
+]
+
+[[setting]]
+id = "multi.acks"
+title = "Multi-ACK"
+summary = "Si chaque accusé de réception d'un message direct est envoyé plus d'une fois."
+default = "0"
+type = "choice"
+values = [
+  { value = "0", means = "un seul accusé" },
+  { value = "1", means = "accusés en plus : livraison plus sûre, plus de temps d'antenne" },
+]
+
+[[setting]]
+id = "telemetry.base"
+node = "companion"
+title = "Télémétrie : base"
+summary = "Qui peut demander à ce noeud sa télémétrie de base (batterie, etc.)."
+type = "choice"
+values = [
+  { value = "0", means = "personne" },
+  { value = "1", means = "contacts autorisés par leurs propres flags de télémétrie" },
+  { value = "2", means = "tout le monde" },
+]
+
+[[setting]]
+id = "telemetry.loc"
+node = "companion"
+title = "Télémétrie : position"
+summary = "Qui peut demander à ce noeud sa position."
+type = "choice"
+values = [
+  { value = "0", means = "personne" },
+  { value = "1", means = "contacts autorisés par leurs propres flags de télémétrie" },
+  { value = "2", means = "tout le monde" },
+]
+
+[[setting]]
+id = "telemetry.env"
+node = "companion"
+title = "Télémétrie : capteurs"
+summary = "Qui peut demander à ce noeud ses mesures de capteurs (température, humidité...)."
+type = "choice"
+values = [
+  { value = "0", means = "personne" },
+  { value = "1", means = "contacts autorisés par leurs propres flags de télémétrie" },
+  { value = "2", means = "tout le monde" },
+]
+
+[[setting]]
+id = "rxdelay"
+title = "Délai réception (expérimental)"
+summary = "Un paquet flood reçu faiblement attend avant d'être traité ; reçu fort, il est traité tout de suite. Les bons chemins relaient d'abord, les copies faibles sont jetées comme doublons."
+notes = ["0 le désactive."]
+default = "0"
+type = "number"
+min = 0
+max = 20
+
+[[setting]]
+id = "af"
+title = "Facteur airtime"
+summary = "Après chaque envoi, le noeud se tait environ son temps d'antenne fois cette valeur. Duty cycle à long terme environ 1 / (1 + af) : 1 = 50 %, 2 = 33 %, 3 = 25 %, 9 = 10 %."
+notes = ["Sur les répéteurs dès le firmware 1.15, dutycycle règle la même chose en pourcentage."]
+warning = "Choisissez une valeur permise chez vous (par exemple 10 % de duty cycle en EU 868 MHz)."
+default = "1.0"
+type = "number"
+min = 0
+max = 9
+
+[[setting]]
+id = "path.hash.mode"
+title = "Taille id chemin"
+summary = "La taille de l'id de ce noeud dans le chemin des paquets qu'il envoie (adverts). Un id plus grand est moins souvent pris pour un autre, mais un paquet contient moins de sauts."
+warning = "Les firmwares 1.13 et plus anciens jettent les paquets à ids de 2 ou 3 octets : portée réduite tant qu'il en reste."
+default = "0"
+since = "1.14"
+type = "choice"
+values = [
+  { value = "0", means = "1 octet (256 ids, jusqu'à 64 sauts)" },
+  { value = "1", means = "2 octets (65 536 ids, jusqu'à 32 sauts)" },
+  { value = "2", means = "3 octets (16,7 millions d'ids, jusqu'à 21 sauts)" },
+]
+
+[[setting]]
+id = "ble.pin"
+node = "companion"
+title = "PIN Bluetooth"
+summary = "Le PIN qu'un téléphone ou un ordinateur tape pour s'appairer à ce compagnon en Bluetooth : 6 chiffres, ou 0 pour le choix du firmware."
+notes = [
+  "0 : un compagnon avec écran tire un PIN au hasard à chaque démarrage et l'affiche ; sans écran, il utilise 123456.",
+  "Utilisé au prochain démarrage du compagnon. Les téléphones et ordinateurs déjà appairés continuent de marcher ; un nouvel appairage demande le nouveau PIN.",
+]
+
+# ---------------------------------------------------------------------------------------------
+# Répéteur, salon, capteur (leur console texte : set <id> <valeur>)
+# ---------------------------------------------------------------------------------------------
+
+[[setting]]
+id = "radio"
+node = "console"
+title = "Paramètres radio"
+summary = "Fréquence (MHz), bande passante (kHz), SF et CR, écrits freq,bw,sf,cr. Tous les noeuds du mesh doivent avoir les mêmes."
+notes = ["Le noeud les applique après un redémarrage."]
+warning = "Les changer coupe le noeud d'un mesh qui garde les anciens réglages. Utilisez une fréquence permise chez vous."
+default = "869.618,62.5,8,5"
+type = "radio"
+
+[[setting]]
+id = "tx"
+node = "console"
+title = "Puissance émise"
+summary = "La puissance de la puce LoRa, en dBm."
+notes = ["Certains appareils ont un ampli après la puce : la puissance émise est alors plus haute que cette valeur. Voir le manuel de l'appareil."]
+warning = "Trop de puissance peut être illégal chez vous."
+default = "selon l'appareil"
+type = "integer"
+min = 1
+max = 22
+unit = "dBm"
+
+[[setting]]
+id = "radio.rxgain"
+node = "console"
+title = "Gain réception renforcé"
+summary = "Le gain de réception renforcé de la puce radio (SX12xx, LR1110) : capte des signaux plus faibles."
+notes = ["Après une mise à jour en 1.14.1 sans effacement, il peut être désactivé (firmware issue #2118)."]
+default = "on"
+since = "1.14.1"
+type = "choice"
+values = [
+  { value = "on", means = "gain renforcé" },
+  { value = "off", means = "gain normal" },
+]
+
+[[setting]]
+id = "radio.fem.rxgain"
+node = "console"
+title = "Gain réception front-end"
+summary = "L'ampli de réception du front-end LoRa de l'appareil, s'il y en a un. Distinct du gain de la puce radio (radio.rxgain)."
+type = "choice"
+values = [
+  { value = "on", means = "ampli activé" },
+  { value = "off", means = "ampli désactivé" },
+]
+
+[[setting]]
+id = "radio.fem.txgain"
+node = "console"
+title = "Gain émission front-end"
+summary = "Le gain d'émission réglable du front-end LoRa de l'appareil, s'il y en a un."
+notes = ["Sur une Station G3, il s'applique dès l'envoi suivant ; le cavalier PA PL1 doit être retiré pour le contrôle logiciel."]
+warning = "Vérifiez que la puissance totale est permise chez vous et que l'alimentation la supporte."
+type = "choice"
+values = [
+  { value = "on", means = "gain fort" },
+  { value = "off", means = "gain faible" },
+]
+
+[[setting]]
+id = "name"
+node = "console"
+title = "Nom du noeud"
+summary = "Le nom que le noeud annonce sur le mesh."
+notes = ["Un advert contient jusqu'à 31 octets de nom, 23 s'il porte une position : un nom plus long est coupé. Emoji et lettres accentuées prennent plus d'un octet."]
+type = "text"
+max_bytes = 31
+forbidden = "[]\\:,?*"
+
+[[setting]]
+id = "password"
+node = "console"
+title = "Mot de passe admin"
+summary = "Le mot de passe de connexion admin depuis un téléphone ou un autre noeud : qui l'a peut changer tout réglage, par radio."
+notes = [
+  "Se change par sa propre commande (password <nouveau>), pas avec set. Le noeud répond le nouveau mot de passe : ce programme ne l'affiche ni ne le journalise.",
+  "Le firmware n'a pas de commande pour le relire : ni ce programme ni une sauvegarde ne peut l'afficher, seulement le remplacer.",
+]
+warning = "Gardez le nouveau : sans lui, le noeud ne se gère plus que par USB."
+default = "password"
+type = "text"
+max_bytes = 15
+
+[[setting]]
+id = "prv.key"
+title = "Clé privée (identité)"
+summary = "L'identité du noeud sur le mesh : 64 octets, tapés en 128 chiffres hexa. Sa clé publique, par laquelle les autres noeuds le connaissent, en découle."
+notes = [
+  "Un répéteur, salon ou capteur la prend avec set prv.key et l'utilise après un redémarrage. Un compagnon la prend tout de suite et recharge ses contacts.",
+  "Le firmware refuse une clé non valide. Un compagnon compilé sans import de clé la refuse aussi.",
+  "Faites d'abord une sauvegarde du noeud : elle garde l'ancienne clé.",
+]
+warning = "Une autre clé en fait un autre noeud : contacts, connexions, chemins et salons liés à l'ancienne clé ne l'atteignent plus."
+type = "key"
+max_bytes = 64
+
+[[setting]]
+id = "guest.password"
+node = "console"
+title = "Mot de passe invité"
+summary = "Le mot de passe de connexion invité : lecture seule, aucun réglage. Sur un salon, le mot de passe pour y entrer."
+notes = [
+  "Vide : pas de connexion invité (défaut d'un répéteur).",
+  "Affiché en mode édition, ou avec s dans la vue du noeud ; une sauvegarde le contient (avec ses secrets).",
+]
+type = "text"
+max_bytes = 15
+empty_ok = true
+
+[[setting]]
+id = "owner.info"
+node = "console"
+title = "Propriétaire"
+summary = "Un texte libre sur le propriétaire, donné à qui le demande au noeud. Un | commence une nouvelle ligne."
+since = "1.12"
+type = "text"
+max_bytes = 119
+empty_ok = true
+
+[[setting]]
+id = "adc.multiplier"
+node = "console"
+title = "Multiplicateur batterie"
+summary = "Affine la mesure de tension de la batterie. 0 utilise la valeur propre à l'appareil."
+default = "0 (valeur de l'appareil)"
+type = "number"
+min = 0
+max = 10
+
+[[setting]]
+id = "repeat"
+node = "console"
+title = "Répéter"
+summary = "Si le noeud relaie les paquets des autres noeuds. Un répéteur qui ne répète pas ne répond que pour lui-même."
+default = "on"
+type = "choice"
+values = [
+  { value = "on", means = "relaie les paquets" },
+  { value = "off", means = "ne relaie pas" },
+]
+
+[[setting]]
+id = "loop.detect"
+node = "console"
+title = "Détection boucles"
+summary = "Jette les paquets flood qui semblent tourner en boucle : son propre id est déjà trop souvent dans leur chemin. Sinon, un seul firmware défaillant qui modifie les paquets peut lancer une tempête répétée sur 64 sauts."
+default = "off"
+since = "1.14"
+type = "choice"
+values = [
+  { value = "off", means = "pas de contrôle" },
+  { value = "minimal", means = "jeté si son id y est déjà 4 fois (ids 1 octet), 2 fois (2 octets), 1 fois (3 octets)" },
+  { value = "moderate", means = "jeté à 2 fois (ids 1 octet), 1 fois (2 et 3 octets)" },
+  { value = "strict", means = "jeté dès que son id y est déjà une fois" },
+]
+
+[[setting]]
+id = "txdelay"
+node = "console"
+title = "Délai réémission flood"
+summary = "Quand plusieurs répéteurs entendent le même paquet flood, chacun attend un temps aléatoire avant de le relayer, pour ne pas émettre ensemble. Ce facteur règle cette attente : plus haut = moins de collisions, plus de délai. 0 = pas d'attente."
+default = "0.5"
+type = "number"
+min = 0
+max = 2
+
+[[setting]]
+id = "direct.txdelay"
+node = "console"
+title = "Délai réémission direct"
+summary = "La même attente aléatoire que le délai flood, pour les paquets directs (routés). Plus bas par défaut : un paquet direct vise un seul saut suivant, peu de noeuds se disputent l'envoi."
+default = "0.3 (répéteur), 0.2 (salon, capteur)"
+type = "number"
+min = 0
+max = 2
+
+[[setting]]
+id = "dutycycle"
+node = "console"
+title = "Limite duty cycle"
+summary = "La part maximale du temps que ce noeud peut passer à émettre, en pourcent. 100 = pas de limite. C'est le facteur airtime (af) écrit en pourcentage."
+notes = ["Le noeud répond la valeur qu'il utilise vraiment (arrondie)."]
+warning = "Choisissez une valeur permise chez vous : les bandes EU 868 MHz permettent 10 %, certaines 1 % seulement."
+default = "50"
+since = "1.15"
+type = "number"
+min = 1
+max = 100
+unit = "%"
+
+[[setting]]
+id = "int.thresh"
+node = "console"
+title = "Seuil d'interférence"
+summary = "Avant d'émettre, le noeud écoute ; au-dessus de ce niveau de bruit, il attend. 0 = pas de contrôle."
+default = "0"
+type = "integer"
+min = 0
+max = 255
+
+[[setting]]
+id = "cad"
+node = "console"
+title = "Détection d'activité canal"
+summary = "Avant d'émettre, la radio vérifie elle-même si quelqu'un émet et attend si oui. Fonctionne avec le seuil d'interférence."
+default = "off"
+type = "choice"
+values = [
+  { value = "on", means = "contrôle avant chaque envoi" },
+  { value = "off", means = "pas de contrôle" },
+]
+
+[[setting]]
+id = "agc.reset.interval"
+node = "console"
+title = "Intervalle reset AGC"
+summary = "Tous les combien le contrôle automatique de gain de la radio est remis à zéro, en secondes. Arrondi au multiple de 4 inférieur. 0 = jamais."
+default = "0"
+type = "integer"
+min = 0
+max = 1020
+unit = "s"
+
+[[setting]]
+id = "flood.advert.interval"
+node = "console"
+title = "Intervalle advert flood"
+summary = "Tous les combien le noeud s'annonce à tout le mesh, en heures. 0 = jamais."
+default = "47 (répéteur, salon), 0 (capteur)"
+type = "integer"
+min = 3
+max = 168
+zero_off = true
+unit = "h"
+
+[[setting]]
+id = "advert.interval"
+node = "console"
+title = "Intervalle advert 0 saut"
+summary = "Tous les combien le noeud s'annonce à ses voisins directs seulement, en minutes. Arrondi au nombre pair inférieur. 0 = jamais."
+notes = ["Un nouveau noeud démarre à 2 minutes ; enregistrer un réglage passe un intervalle sous 60 à 0."]
+default = "0"
+type = "integer"
+min = 60
+max = 240
+zero_off = true
+unit = "min"
+
+[[setting]]
+id = "flood.max"
+node = "console"
+title = "Sauts max. d'un flood"
+summary = "Un paquet flood qui a déjà fait ce nombre de sauts n'est plus relayé."
+default = "64"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "flood.max.unscoped"
+node = "console"
+title = "Sauts max. flood sans région"
+summary = "La même limite pour les paquets sans région (scope). Une valeur basse comme 3 garde les messages locaux sans région, et les floods lointains s'arrêtent ici."
+default = "64 (suit flood.max tant que non réglé)"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "flood.max.advert"
+node = "console"
+title = "Sauts max. d'un advert"
+summary = "La même limite pour les adverts (noeuds qui s'annoncent)."
+default = "8"
+type = "integer"
+min = 0
+max = 64
+
+[[setting]]
+id = "allow.read.only"
+node = "console"
+title = "Lecture seule"
+summary = "Salon : si les utilisateurs sans mot de passe peuvent lire le salon."
+default = "off"
+type = "choice"
+values = [
+  { value = "on", means = "tout le monde lit ; écrire demande une connexion" },
+  { value = "off", means = "lire demande aussi une connexion" },
+]
+
+[[setting]]
+id = "bridge.enabled"
+node = "console"
+title = "Pont"
+summary = "Si les paquets passent par un pont vers l'autre liaison de l'appareil (RS-232 ou ESP-Now)."
+default = "off"
+type = "choice"
+values = [
+  { value = "on", means = "pont activé" },
+  { value = "off", means = "pont désactivé" },
+]
+
+[[setting]]
+id = "bridge.delay"
+node = "console"
+title = "Délai du pont"
+summary = "Combien de temps un paquet attend avant de passer par le pont, en millisecondes."
+default = "500"
+type = "integer"
+min = 0
+max = 10000
+unit = "ms"
+
+[[setting]]
+id = "bridge.source"
+node = "console"
+title = "Source du pont"
+summary = "Quels paquets vont au pont."
+default = "logTx"
+type = "choice"
+values = [
+  { value = "rx", shows = "logRx", means = "les paquets qu'il reçoit" },
+  { value = "tx", shows = "logTx", means = "les paquets qu'il envoie" },
+]
+
+[[setting]]
+id = "bridge.baud"
+node = "console"
+title = "Vitesse du pont"
+summary = "La vitesse du pont RS-232, en bauds."
+default = "115200"
+type = "choice"
+values = [
+  { value = "9600" },
+  { value = "19200" },
+  { value = "38400" },
+  { value = "57600" },
+  { value = "115200" },
+]
+
+[[setting]]
+id = "bridge.channel"
+node = "console"
+title = "Canal du pont"
+summary = "Le canal Wi-Fi du pont ESP-Now."
+type = "integer"
+min = 1
+max = 14

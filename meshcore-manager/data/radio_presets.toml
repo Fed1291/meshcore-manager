@@ -1,0 +1,213 @@
+# Radio presets: the settings a MeshCore mesh uses in a country or region. Built into the program;
+# radio_presets.toml in the data folder replaces this list when it is there (same format).
+#
+# Source: the MeshCore app API (https://api.meshcore.nz/api/v1/config, "suggested_radio_settings"),
+# the list the official apps offer (firmware docs/radio_presets.md). Copied 2026-11-18.
+# They are suggestions by the community: the radio must still follow the rules where it is used.
+#
+# title          as the apps show it
+# freq           MHz        bw  kHz        sf  5-12        cr  5-8
+# path_hash_size bytes per hop id in paths (1-3), when the mesh agreed on one: sets the node's
+#                path hash mode to size - 1
+
+[[preset]]
+title = "Australia"
+freq = 915.800
+bw = 250
+sf = 10
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "Australia (Narrow)"
+freq = 916.575
+bw = 62.5
+sf = 7
+cr = 7
+path_hash_size = 2
+
+[[preset]]
+title = "Australia (Mid)"
+freq = 915.075
+bw = 125
+sf = 9
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "Australia: SA, WA"
+freq = 923.125
+bw = 62.5
+sf = 8
+cr = 8
+path_hash_size = 2
+
+[[preset]]
+title = "Australia: QLD"
+freq = 923.125
+bw = 62.5
+sf = 8
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "Brazil"
+freq = 923.125
+bw = 62.5
+sf = 8
+cr = 8
+
+[[preset]]
+title = "Canada"
+freq = 910.525
+bw = 62.5
+sf = 7
+cr = 5
+path_hash_size = 3
+
+[[preset]]
+title = "Costa Rica"
+freq = 910.525
+bw = 125
+sf = 11
+cr = 5
+
+[[preset]]
+title = "EU/UK (Narrow)"
+freq = 869.618
+bw = 62.5
+sf = 8
+cr = 8
+
+[[preset]]
+title = "EU/UK (Deprecated)"
+freq = 869.525
+bw = 250
+sf = 11
+cr = 5
+
+[[preset]]
+title = "Czech Republic (Narrow)"
+freq = 869.432
+bw = 62.5
+sf = 7
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "EU 433MHz (Long Range)"
+freq = 433.650
+bw = 250
+sf = 11
+cr = 5
+
+[[preset]]
+title = "EU 433MHz (Narrow)"
+freq = 433.650
+bw = 62.5
+sf = 8
+cr = 8
+
+[[preset]]
+title = "Hungary"
+freq = 869.618
+bw = 62.5
+sf = 7
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "Netherlands"
+freq = 869.618
+bw = 62.5
+sf = 7
+cr = 5
+
+[[preset]]
+title = "Netherlands (Limburg)"
+freq = 869.618
+bw = 62.5
+sf = 8
+cr = 8
+path_hash_size = 2
+
+[[preset]]
+title = "New Zealand (Narrow)"
+freq = 917.375
+bw = 62.5
+sf = 7
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "New Zealand (Gisborne)"
+freq = 917.375
+bw = 250
+sf = 11
+cr = 5
+path_hash_size = 1
+
+[[preset]]
+title = "Portugal 433"
+freq = 433.375
+bw = 62.5
+sf = 9
+cr = 6
+
+[[preset]]
+title = "Portugal 868"
+freq = 869.618
+bw = 62.5
+sf = 7
+cr = 6
+
+[[preset]]
+title = "Slovakia"
+freq = 869.618
+bw = 62.5
+sf = 7
+cr = 5
+path_hash_size = 2
+
+[[preset]]
+title = "Switzerland"
+freq = 869.618
+bw = 62.5
+sf = 8
+cr = 8
+
+[[preset]]
+title = "Thailand"
+freq = 921
+bw = 62.5
+sf = 7
+cr = 5
+
+[[preset]]
+title = "USA"
+freq = 910.525
+bw = 62.5
+sf = 7
+cr = 5
+
+[[preset]]
+title = "USA - Southern California"
+freq = 927.875
+bw = 62.5
+sf = 7
+cr = 5
+path_hash_size = 3
+
+[[preset]]
+title = "Vietnam (Narrow)"
+freq = 920.250
+bw = 62.5
+sf = 8
+cr = 5
+
+[[preset]]
+title = "Vietnam (Deprecated)"
+freq = 920.250
+bw = 250
+sf = 11
+cr = 5

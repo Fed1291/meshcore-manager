@@ -1,0 +1,607 @@
+# MeshCore hardware: how Meshcore Manager recognises a board and names it.
+# Built into the program. To add or correct a board, put entries in the same format in
+# devices.toml in the data folder (next to config.toml): they are added, and win over the ones here.
+#
+# [[device]]: what a companion says about itself (DEVICE_INFO: its model, the firmware's
+#   getManufacturerName()). `model` matches the start of it, ignoring case, up to a space,
+#   "." or "(" ("Heltec V4" matches "Heltec V4 OLED" and "Heltec V4.3 TFT"); the longest match wins.
+#   name / maker as the MeshCore flasher shows them, chip = the processor.
+# [[usb]]: a USB serial port's vendor:product id (hex), what it usually is. Meshtastic boards use
+#   the same hardware and the same ids. `flash_mode = true`: the board is in its bootloader
+#   (flashing mode), not running a firmware: reset it.
+#
+# Sources: MeshCore firmware (variants/*, boards/*.json) and the MeshCore web flasher.
+
+# ---------- Heltec ----------
+[[device]]
+model = "Heltec V2"
+name = "Heltec WiFi LoRa 32 V2"
+maker = "Heltec"
+chip = "ESP32"
+
+[[device]]
+model = "Heltec V3"
+name = "Heltec WiFi LoRa 32 V3"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec V4"
+name = "Heltec WiFi LoRa 32 V4"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec V4.3"
+name = "Heltec WiFi LoRa 32 V4.3"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec V4 R8"
+name = "Heltec V4 R8"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec E213"
+name = "Heltec Vision Master E213"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec E290"
+name = "Heltec Vision Master E290"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec T190"
+name = "Heltec Vision Master T190"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec T114"
+name = "Heltec Mesh Node T114"
+maker = "Heltec"
+chip = "nRF52840"
+
+[[device]]
+model = "Heltec T096"
+name = "Heltec Mesh Node T096"
+maker = "Heltec"
+chip = "nRF52840"
+
+[[device]]
+model = "Heltec T1"
+name = "Heltec Mesh Node T1"
+maker = "Heltec"
+chip = "nRF52840"
+
+[[device]]
+model = "Heltec Mesh Solar"
+name = "Heltec MeshSolar"
+maker = "Heltec"
+chip = "nRF52840"
+
+[[device]]
+model = "Heltec Tower V2"
+name = "Heltec MeshTower V2"
+maker = "Heltec"
+chip = "nRF52840"
+
+[[device]]
+model = "Heltec MeshPocket"
+name = "Heltec MeshPocket"
+maker = "Heltec"
+chip = "nRF52840"
+
+[[device]]
+model = "Heltec Tracker V2"
+name = "Heltec Wireless Tracker V2"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec Wireless Paper"
+name = "Heltec Wireless Paper"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec RC32"
+name = "Heltec RC32"
+maker = "Heltec"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Heltec CT62"
+name = "Heltec HT-CT62"
+maker = "Heltec"
+chip = "ESP32-C3"
+
+# ---------- LilyGo ----------
+[[device]]
+model = "LilyGo T-Beam"
+name = "LilyGo T-Beam"
+maker = "LilyGo"
+chip = "ESP32"
+
+[[device]]
+model = "LilyGo T-Beam 1W"
+name = "LilyGo T-Beam 1W"
+maker = "LilyGo"
+chip = "ESP32-S3"
+
+[[device]]
+model = "LilyGo T-Deck"
+name = "LilyGo T-Deck"
+maker = "LilyGo"
+chip = "ESP32-S3"
+
+[[device]]
+model = "LilyGo T-Echo"
+name = "LilyGo T-Echo"
+maker = "LilyGo"
+chip = "nRF52840"
+
+[[device]]
+model = "LilyGo T-Echo Lite"
+name = "LilyGo T-Echo Lite"
+maker = "LilyGo"
+chip = "nRF52840"
+
+[[device]]
+model = "LilyGo T-Echo Card"
+name = "LilyGo T-Echo Card"
+maker = "LilyGo"
+chip = "nRF52840"
+
+[[device]]
+model = "LilyGo T-Impulse-Plus"
+name = "LilyGo T-Impulse Plus"
+maker = "LilyGo"
+chip = "nRF52840"
+
+[[device]]
+model = "LilyGo T-LoRa V2.1"
+name = "LilyGo LoRa32 V2.1_1.6"
+maker = "LilyGo"
+chip = "ESP32"
+
+[[device]]
+model = "LilyGo T-ETH Elite"
+name = "LilyGo T-ETH Elite"
+maker = "LilyGo"
+chip = "ESP32-S3"
+
+# ---------- RAK Wireless ----------
+[[device]]
+model = "RAK 4631"
+name = "RAK WisBlock / WisMesh (RAK4631)"
+maker = "RAK Wireless"
+chip = "nRF52840"
+
+[[device]]
+model = "RAK 3112"
+name = "RAK WisBlock 3112"
+maker = "RAK Wireless"
+chip = "ESP32-S3"
+
+[[device]]
+model = "RAK 3401"
+name = "RAK WisMesh 1W Booster (3401)"
+maker = "RAK Wireless"
+chip = "nRF52840"
+
+[[device]]
+model = "RAK 11310"
+name = "RAK WisBlock 11310"
+maker = "RAK Wireless"
+chip = "RP2040"
+
+[[device]]
+model = "RAK 3x72"
+name = "RAK 3172 / 3272"
+maker = "RAK Wireless"
+chip = "STM32WL"
+
+[[device]]
+model = "RAK WisMesh Tag"
+name = "RAK WisMesh Tag"
+maker = "RAK Wireless"
+chip = "nRF52840"
+
+# ---------- Seeed Studio ----------
+[[device]]
+model = "Seeed Tracker T1000-E"
+name = "Seeed SenseCAP T1000-E"
+maker = "Seeed Studio"
+chip = "nRF52840"
+
+[[device]]
+model = "Seeed SenseCAP MeshTracker X1"
+name = "Seeed SenseCAP MeshTracker X1"
+maker = "Seeed Studio"
+chip = "nRF52840"
+
+[[device]]
+model = "Seeed SenseCap Solar"
+name = "Seeed SenseCAP Solar Node P1"
+maker = "Seeed Studio"
+chip = "nRF52840"
+
+[[device]]
+model = "Seeed Wio Tracker L1"
+name = "Seeed Wio Tracker L1"
+maker = "Seeed Studio"
+chip = "nRF52840"
+
+[[device]]
+model = "Seeed Wio WM1110"
+name = "Seeed Wio WM1110"
+maker = "Seeed Studio"
+chip = "nRF52840"
+
+[[device]]
+model = "Seeed Xiao-nrf52"
+name = "Seeed XIAO nRF52840 (Wio-SX1262)"
+maker = "Seeed Studio"
+chip = "nRF52840"
+
+[[device]]
+model = "Xiao S3"
+name = "Seeed XIAO ESP32-S3"
+maker = "Seeed Studio"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Xiao S3 WIO"
+name = "Seeed XIAO ESP32-S3 (Wio-SX1262)"
+maker = "Seeed Studio"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Xiao C3"
+name = "Seeed XIAO ESP32-C3"
+maker = "Seeed Studio"
+chip = "ESP32-C3"
+
+[[device]]
+model = "Xiao C6"
+name = "Seeed XIAO ESP32-C6"
+maker = "Seeed Studio"
+chip = "ESP32-C6"
+
+[[device]]
+model = "Xiao RP2040"
+name = "Seeed XIAO RP2040"
+maker = "Seeed Studio"
+chip = "RP2040"
+
+[[device]]
+model = "Seeed Wio E5 Dev Board"
+name = "Seeed Wio-E5 Dev Board"
+maker = "Seeed Studio"
+chip = "STM32WL"
+
+[[device]]
+model = "Seeed Wio E5 mini"
+name = "Seeed Wio-E5 mini"
+maker = "Seeed Studio"
+chip = "STM32WL"
+
+# ---------- Elecrow ThinkNode ----------
+[[device]]
+model = "Elecrow ThinkNode-M1"
+name = "Elecrow ThinkNode M1"
+maker = "Elecrow"
+chip = "nRF52840"
+
+[[device]]
+model = "Elecrow ThinkNode M2"
+name = "Elecrow ThinkNode M2"
+maker = "Elecrow"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Elecrow ThinkNode M3"
+name = "Elecrow ThinkNode M3"
+maker = "Elecrow"
+chip = "nRF52840"
+
+[[device]]
+model = "Elecrow ThinkNode M4"
+name = "Elecrow ThinkNode M4"
+maker = "Elecrow"
+chip = "nRF52840"
+
+[[device]]
+model = "Elecrow ThinkNode M5"
+name = "Elecrow ThinkNode M5"
+maker = "Elecrow"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Elecrow ThinkNode M6"
+name = "Elecrow ThinkNode M6"
+maker = "Elecrow"
+chip = "nRF52840"
+
+[[device]]
+model = "Elecrow ThinkNode M7"
+name = "Elecrow ThinkNode M7"
+maker = "Elecrow"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Elecrow ThinkNode-M8"
+name = "Elecrow ThinkNode M8"
+maker = "Elecrow"
+chip = "nRF52840"
+
+[[device]]
+model = "Elecrow ThinkNode M9"
+name = "Elecrow ThinkNode M9"
+maker = "Elecrow"
+chip = "ESP32-S3"
+
+# ---------- GAT-IoT ----------
+[[device]]
+model = "GAT562 Mesh Tracker Pro"
+name = "GAT-IoT GAT562 Tracker"
+maker = "GAT-IoT"
+chip = "nRF52840"
+
+[[device]]
+model = "GAT562 30S Mesh Kit"
+name = "GAT-IoT GAT562 30s"
+maker = "GAT-IoT"
+chip = "nRF52840"
+
+[[device]]
+model = "GAT562 EVB Pro"
+name = "GAT-IoT GAT562 EVB Pro"
+maker = "GAT-IoT"
+chip = "nRF52840"
+
+[[device]]
+model = "GAT562 Mesh Watch 13"
+name = "GAT-IoT GAT562 Mesh Watch 13"
+maker = "GAT-IoT"
+chip = "nRF52840"
+
+# ---------- UnitEng / B&Q ----------
+[[device]]
+model = "Station G2"
+name = "UnitEng Station G2"
+maker = "UnitEng"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Station G3 ESP32"
+name = "UnitEng / B&Q Station G3"
+maker = "UnitEng"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Nano G2 Ultra"
+name = "UnitEng Nano G2 Ultra"
+maker = "UnitEng"
+chip = "nRF52840"
+
+# ---------- others ----------
+[[device]]
+model = "Keepteen LT1"
+name = "Keepteen LT1"
+maker = "Keepteen"
+chip = "nRF52840"
+
+[[device]]
+model = "Ikoka Stick"
+name = "Ikoka Stick"
+maker = "Ikoka"
+chip = "nRF52840"
+
+[[device]]
+model = "Ikoka Nano"
+name = "Ikoka Nano"
+maker = "Ikoka"
+chip = "nRF52840"
+
+[[device]]
+model = "Ikoka Handheld"
+name = "Ikoka Handheld"
+maker = "Ikoka"
+chip = "nRF52840"
+
+[[device]]
+model = "muzi works R1 Neo"
+name = "Muzi Works R1 Neo"
+maker = "Muzi Works"
+chip = "nRF52840"
+
+[[device]]
+model = "ProMicro DIY"
+name = "ProMicro nRF52840 (Faketec)"
+maker = "DIY"
+chip = "nRF52840"
+
+[[device]]
+model = "Meshtiny"
+name = "Meshtiny"
+maker = "Meshtiny"
+chip = "nRF52840"
+
+[[device]]
+model = "Meshadventurer"
+name = "Meshadventurer"
+maker = "Meshadventurer"
+chip = "ESP32"
+
+[[device]]
+model = "Minewsemi"
+name = "Minewsemi ME25LS01"
+maker = "Minewsemi"
+chip = "nRF52840"
+
+[[device]]
+model = "Meshnology W12"
+name = "Meshnology W12"
+maker = "Meshnology"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Unit C6L"
+name = "M5Stack Unit C6L"
+maker = "M5Stack"
+chip = "ESP32-C6"
+
+[[device]]
+model = "Pico W"
+name = "Raspberry Pi Pico W + SX1262"
+maker = "Raspberry Pi"
+chip = "RP2040"
+
+[[device]]
+model = "Waveshare RP2040-LoRa"
+name = "Waveshare RP2040-LoRa"
+maker = "Waveshare"
+chip = "RP2040"
+
+[[device]]
+model = "Waveshare ESP32-S3-LR1121"
+name = "Waveshare ESP32-S3 LR1121"
+maker = "Waveshare"
+chip = "ESP32-S3"
+
+[[device]]
+model = "Tiny Relay"
+name = "Tiny Relay"
+maker = "DIY"
+chip = "STM32WL"
+
+[[device]]
+model = "Generic ESP32"
+name = "ESP32 board"
+maker = ""
+chip = "ESP32"
+
+[[device]]
+model = "Generic STM32"
+name = "STM32 board"
+maker = ""
+chip = "STM32WL"
+
+# ---------- USB ids ----------
+[[usb]]
+id = "303a:1001"
+chip = "ESP32-S3 / C3 / C6 (built-in USB)"
+boards = "Heltec V3 / V4, T-Beam Supreme, T-Deck, Station G2 / G3, ThinkNode M2 / M5 / M7 / M9, XIAO S3 / C3 / C6, RAK3112"
+
+[[usb]]
+id = "303a:0002"
+chip = "ESP32-S3 (USB serial)"
+boards = "Heltec Vision Master E213 / E290 / T190, Meshnology W12"
+
+[[usb]]
+id = "10c4:ea60"
+chip = "Silicon Labs CP210x USB-serial"
+boards = "Heltec V2, LilyGo LoRa32, T-Beam, many ESP32 boards"
+
+[[usb]]
+id = "1a86:55d4"
+chip = "WCH CH9102 USB-serial"
+boards = "LilyGo T-Beam 1.2, LoRa32 V2.1, many ESP32 boards"
+
+[[usb]]
+id = "1a86:7523"
+chip = "WCH CH340 USB-serial"
+boards = "many ESP32 boards, STM32WL boards with an adapter"
+
+[[usb]]
+id = "0403:6001"
+chip = "FTDI USB-serial"
+boards = "boards wired through an FTDI adapter"
+
+[[usb]]
+id = "239a:8029"
+chip = "nRF52840 (Adafruit core)"
+boards = "RAK4631, T-Echo, T114, T1000-E, MeshSolar, Faketec, Nano G2 Ultra, RAK3401, T-Impulse Plus"
+
+[[usb]]
+id = "239a:802a"
+chip = "nRF52840 (Adafruit core)"
+boards = "nRF52840 boards"
+
+[[usb]]
+id = "239a:4405"
+chip = "nRF52840"
+boards = "Elecrow ThinkNode M1 / M3 / M4 / M6 / M8, Heltec MeshPocket / MeshTower V2"
+
+[[usb]]
+id = "239a:00b3"
+chip = "nRF52840"
+boards = "ProMicro (Faketec), Keepteen LT1"
+
+[[usb]]
+id = "2886:8044"
+chip = "nRF52840"
+boards = "Seeed XIAO nRF52840, Ikoka, Wio WM1110"
+
+[[usb]]
+id = "2886:1667"
+chip = "nRF52840"
+boards = "Seeed Wio Tracker L1"
+
+[[usb]]
+id = "2886:1668"
+chip = "nRF52840"
+boards = "Seeed Wio Tracker L1"
+
+[[usb]]
+id = "2886:0057"
+chip = "nRF52840"
+boards = "Seeed SenseCAP MeshTracker X1"
+
+[[usb]]
+id = "2886:0059"
+chip = "nRF52840"
+boards = "Seeed SenseCAP Solar Node P1"
+
+[[usb]]
+id = "2e8a:000a"
+chip = "RP2040"
+boards = "Raspberry Pi Pico W, RAK11310, XIAO RP2040, Waveshare RP2040-LoRa"
+
+# bootloaders: the board waits to be flashed
+[[usb]]
+id = "239a:0029"
+chip = "nRF52840 bootloader"
+boards = "nRF52840 boards in flashing mode"
+flash_mode = true
+
+[[usb]]
+id = "239a:002a"
+chip = "nRF52840 bootloader"
+boards = "nRF52840 boards in flashing mode"
+flash_mode = true
+
+[[usb]]
+id = "239a:0071"
+chip = "nRF52840 bootloader"
+boards = "Heltec MeshTower V2 in flashing mode"
+flash_mode = true
+
+[[usb]]
+id = "2886:0044"
+chip = "nRF52840 bootloader"
+boards = "Seeed XIAO nRF52840 in flashing mode"
+flash_mode = true
+
+[[usb]]
+id = "2e8a:0003"
+chip = "RP2040 bootloader"
+boards = "RP2040 boards in flashing mode (BOOTSEL)"
+flash_mode = true
